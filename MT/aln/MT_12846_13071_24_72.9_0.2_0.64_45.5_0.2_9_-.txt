@@ -1,0 +1,3 @@
+>MT_12846_13071_24_72.9_0.2_0.64_45.5_0.2_9_-_0001
+GGCUGAGACGGGAGUUGGGCCUUCUAUGGCUGAGGGUAGUCAUGGGUGUAGGCCAAAUUGGGCUGAUUUUCCUGUUGCUGCUAGGAGUAGGCCUAGUAGUGGGAUGAUGGUGGUGUUGUUGUUUAGUAUGAAGAUUUGUUGGAGGUCUCAUGAGUUGGAGUUUAGGAGAAAUCAUGCUAUGGCUAGGAUAAAGCCAAUGUCUCCGAUGCGGUUAUAUAGGAUUGCU
+((..((....((.....((((..(((((((....((.((((.(((.......))).........))))..))....)))).))).......((.......))...................................(((((...((((................))))..))).))...)))).........))....)).))...((((((......)))))). (-40.32 =  -8.73 + -31.58)

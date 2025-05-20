@@ -1,0 +1,3 @@
+>MT_9438_9717_24_77.0_0.2_0.53_44.8_0.0_9_+_0001
+GGCCUACGAUACGGAAUAAUUCUAUUUAUCAUCUCAGAAGUAUUCUUCUUCGCAGGAUUCUUCUGAGCCUUCUACCACUCAAGCCUAGCCCCUACCCCCGAACUAGGAGGAUGCUGACCACCAACAGGCAUUACCCCACUAAACCCCCUAGAAGUCCCACUACUAAACACAUCAGUACUACUAGCAUCAGGAGUAUCAAUUACCUGAGCCCACCAUAGCCUAAUAGAAGGCAACCGAAAACAAAUAAUUCAAGCCCUACUCAUUACAAUUUUACUAGGCG
+...........(((.((((......)))).......((((.......))))...((...((((((((..........)))..((...))................((.((.......)).))....((.......))............)))))..))..........((....)).......((.((.((...........)).)))).........(((......)))...)))................((.(((................))))). (-39.73 =  -3.16 + -36.58)

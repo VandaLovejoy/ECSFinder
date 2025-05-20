@@ -1,0 +1,3 @@
+>MT_7025_7133_24_79.0_0.2_0.48_44.1_0.0_55_+_0001
+AGCCCACUUCCACUAUGUCCUAUCAAUAGGAGCUGUAUUCGCCAUUAUAGGAGGCUUUGUUCACUGAUUCCCCCUAUUCUCAGGCUAUACCCUAGACCAAACAUGAGCC
+.((.((.((((.................))))..((....(((...(((((.((..(((.....)))..)).))))).....)))...)).............)).)). (-20.31 =  -4.49 + -15.82)

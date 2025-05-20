@@ -1,0 +1,9 @@
+#
+# Method Target_E-val [cov_min,cov_max] [FP | TP True Found | Sen PPV F] 
+# GTp    0.05           [-7.26,28.31]    [0 | 2 18 2 | 11.11 100.00 20.00] 
+#
+# #tests = 18 (base pairs) 2193 (others)
+# in_given  left_pos       right_pos        score      E-value          pvalue      substitutions      power
+#----------------------------------------------------------------------------------------------------------------
+*	        21	        38	28.30553	4.69054e-07	2.60585e-08	6		0.16
+*	        24	        35	20.18066	0.00245306	0.000136281	2		0.00

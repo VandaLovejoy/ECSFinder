@@ -1,0 +1,3 @@
+>MT_2931_3190_24_88.0_0.2_0.28_42.9_2.6_257_+_0001
+AGGGAUAACAGCGCAAUCCUAUUCUAGAGUCCAUAUCGACAA_UAGGGUUUACGACCUCGAUGUUGGAUCAGGACAUCCCAAUGGUGCAGCCGCUAUUAAAGGUUCGUUUGUUCAACGAUUAA_AGUCCUACGUGAUCUGAGUUCAGACCGGAGUAAUCCAGGUCGGUUUCUAUCUAUUAAAU_AUUUCUCCCAGUACGAAAGGACAAGAGAA_AUAAGGCCUACUUC_ACAAAAGCGCCUUCA_ACCCAAUAAAUGAU_AUAAUCUCA
+.(((((.....((.(((((((((...((.......))...)).)))))))..)).....((..((((((((((((..((.(((((((....)))))))...)).(((((.....)))))......))))....))))))))..)).(((((((....))).))))(((....))).........(((((((((.........))....))))).))(((((...(((......))).))))).....................))))). (-107.81 = -51.53 + -56.28)

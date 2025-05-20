@@ -1,0 +1,3 @@
+>MT_2932_3105_24_95.0_0.1_0.11_45.3_0.9_110_-_0001
+UAGAUAGAAACCGACCUGGAUUACUCCGGUCUGAACUCAGAUCACGUAGGACU_UUAAUCGUUGAACAAACGAACCUUUAAUAGCGGCUGCACCAUUGGGAUGUCCUGAUCCAACAUCGAGGUCGUAAACCCUA_UUGUCGAUAUGGACUCUAGAAUAGGAUUGCGCUGUUAUCCC
+..(((((.....(((((.(((......((((((....))))))...((((((......(((((.....)))))..........((....)).((....))..)))))).......))).)))))((((..((((.(((((......))).....)))))).)))).)))))..... (-61.87 = -36.17 + -25.70)
