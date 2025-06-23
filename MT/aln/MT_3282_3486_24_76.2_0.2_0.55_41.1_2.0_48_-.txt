@@ -1,3 +1,0 @@
->MT_3282_3486_24_76.2_0.2_0.55_41.1_2.0_48_-_0001
-GGGUUCUUUAGUGAAUAGUUUUAUGGCGUCAGCGAAGGGUUGUAGUAGGCCGUAUGGGCCUACAAUGUUGGGUCCUUUUCGUAGUUGUAUAUAGCCUAGGAUUUUUCGUUCAACUAGGGUUAGGAAUGCUAUGGCGAGUAGGAUAGGUAUAAUGAGUAGUAGGAUGUUAAUUAUGAACAU__GUUGUUAAGGAGAGG__AGUUGAACCU
-((((((...................((....))....(((((........((...((.((..........)).))....))..........))))).....((((((.(((.((....))..)))..((....))...............................(((((..............))))))))))).......)))))) (-39.20 = -10.57 + -28.63)

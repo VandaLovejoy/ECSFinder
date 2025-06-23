@@ -1,3 +1,0 @@
->MT_15226_15286_24_80.1_0.2_0.46_48.1_0.0_82_-_0001
-GGCGAAGAAUCGUGUAAGGGUGGCUUUGUCUACUGAGAAGCCCCCUCAGAUUCAUUCGACU
-......(((((......(((.((..((.((....)).))..)))))..)))))........ (-13.08 =  -5.06 +  -8.02)

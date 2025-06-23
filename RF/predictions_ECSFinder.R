@@ -54,7 +54,7 @@ predict_probs <- function(model, newdata) {
 
 # Generate predictions
 predicted_probs <- predict_probs(model_rf, x_test)
-threshold <- 0.431
+threshold <- 0.679
 predicted_class <- ifelse(predicted_probs >= threshold, "TP", "FP")
 
 # Compile results

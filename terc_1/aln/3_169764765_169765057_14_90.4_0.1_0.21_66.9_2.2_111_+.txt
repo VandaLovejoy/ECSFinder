@@ -1,3 +1,0 @@
->3_169764765_169765057_14_90.4_0.1_0.21_66.9_2.2_111_+_0001
-GGCGGCAAUGGGCGCCUCCGGAGAAGCCCCGGGCCGACCGCGGCCUCCAGGCGGGGUUC_GGGGGCUGGGCAGGCGACCCGCCGCAGGUCCCCGGGAGGGGCGAACGGGCCAGCAGCUGACAUUUUUUGUUUGCUCC____AGAAUGAACGGUGGAAGGCGGUAGGCCGAGGCUUUUCCGCCCGCUGAAAGUCAGCGAGAAAAACAGCGCGCGGGGAGCAAAAGCGCGGCGCCUACGCCCUUCUCAGUUAGGGUUAGAC__AAAAAAUGGCCGCCACCCCUCCCAGGCCCACCCUCCGCA
-((((((..((((.((.((....)).)))))).)))).))((((.....(((..((((...(((((((..((.((((...)))))).)))))))((((((((......((((((...))).(((((((((((((.(((.....((.(((..((((...(((.....((((..((((((((((.(((((....((.....))....))))).)))).....)))))).)))))))..))))....))).)).))).)))))..)))))))))))....))))))))..))))..))))))). (-198.79 = -113.94 + -84.86)

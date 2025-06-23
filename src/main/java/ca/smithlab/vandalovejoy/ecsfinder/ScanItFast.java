@@ -765,7 +765,7 @@ public class ScanItFast implements Runnable {
                     .filter(path -> {
                         String fileName = path.getFileName().toString();
                         // Must start with the prefix
-                        return fileName.startsWith(prefix) ;
+                        return fileName.startsWith(prefix) && fileName.startsWith("aln");
                     })
                     .forEach(path -> {
                         try {

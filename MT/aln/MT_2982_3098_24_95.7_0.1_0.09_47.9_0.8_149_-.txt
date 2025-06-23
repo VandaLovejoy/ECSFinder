@@ -1,3 +1,0 @@
->MT_2982_3098_24_95.7_0.1_0.09_47.9_0.8_149_-_0001
-AAACCGACCUGGAUUACUCCGGUCUGAACUCAGAUCACGUAGGACU_UUAAUCGUUGAACAAACGAACCUUUAAUAGCGGCUGCACCAUUGGGAUGUCCUGAUCCAACAUCGAGGUCG
-....((((((.(((......((((((....))))))...((((((......(((((.....)))))..........((....)).((....))..)))))).......))).)))))) (-48.77 = -29.67 + -19.10)

@@ -1,3 +1,0 @@
->MT_2815_3101_24_86.9_0.2_0.3_43.9_3.3_289_+_0001
-GGGUGACCUCGGAGAACAAAAAAACCUCCGAGUGA__UUUAAGCCUAGACCU_ACAAGUC_AAAGCA____UAACAUCACUUAUUGAUCC_A__AAAACUUGAUCAACGGAACAAGUUACCCUAGGGAUAACAGCGCAAUCCUAUUCUAGAGUCCAUAUCGACAA_UAGGGUUUACGACCUCGAUGUUGGAUCAGGACAUCCCAAUGGUGCAGCCGCUAUUAAAGGUUCGUUUGUUCAACGAUUAA_AGUCCUACGUGAUCUGAGUUCAGACCGGAGUAAUCCAGGUCGGUUUCUA
-((((((((((((((...........)))))))..........((...(((.......)))....)).................(((..((..................))..))))))))))(((((((.....((.(((((((((...((.......))...)).)))))))..)).....((..((((((((((((..((.(((((((....)))))))...)).(((((.....)))))......))))....))))))))..)).(((((((....))).)))).))))))) (-120.10 = -58.11 + -62.00)

@@ -1,3 +1,0 @@
->MT_1175_1433_24_81.6_0.2_0.43_42.7_6.2_246_-_0001
-UACUACUAAAUCCUCCUUUGACCCUUAG__UUUCAUAAAGGCUUUCGUA_____________AUUUUUCUGGGGUAGAAAAUGUAGCCCAUUUCUUCCCACCUCAUAGGCUACACCUUGACCUAACGUUUUUAUGU____GGAUACUUGUGCUUACUUUUUUUCCUU_UUUAGGGUUUGCUGAAGAUGGCGGUAUAUAGGCUGAAUUAGCAAGAGGUGGUGAGGUUUAUCGGGGUUUAUCGAUUAUAGAACAGGCUCCUCUAGAGGGAUAUAAAGCACCGCC
-...((((..((((..((..((((((((........))))))))...................................(((((.....)))))(((((((((((....((..(((((..(((...((((((((.................((..((((((..........))))))..))))))))))..)))....))).)).....))..))))))).))))......(((((((.((.......))..)))))))...))..))))....))))..... (-94.32 = -45.59 + -48.73)

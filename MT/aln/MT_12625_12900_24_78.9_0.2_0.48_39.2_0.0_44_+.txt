@@ -1,3 +1,0 @@
->MT_12625_12900_24_78.9_0.2_0.48_39.2_0.0_44_+_0001
-ACAUGAUCCAUCAUAGAAUUCUCAAUAUGAUAUAUACACUCAGACCCAAACAUCAACCAAUUCUUCAAAUACCUACUCAUAUUCCUAAUCACUAUACUAAUCCUAGUCACCGCUAACAACCUAUUCCAACUAUUCAUCGGCUGAGAAGGAGUAGGAAUCAUAUCAUUCCUACUAAUCGGAUGAUGAUACGGACGAACAGACGCCAACACAGCAGCCCUACAAGCAAUCCUAUAUAACCGCAUCGGAGACAUUGGCUUUAUCCUAGCCAUAGCAUGA
-...((.((.((((((((....))..))))))..............((...(((((.(((((........................................(((..((((((.........................))).)))..))).((.((((........)))).))..))))).)))))....))..)).))...((.......)).......((.((............(((...))).......((((.......))))...)).)). (-39.89 =  -9.07 + -30.82)

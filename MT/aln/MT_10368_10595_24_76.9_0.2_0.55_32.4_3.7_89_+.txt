@@ -1,3 +1,0 @@
->MT_10368_10595_24_76.9_0.2_0.55_32.4_3.7_89_+_0001
-UACGAAUGAACCCAAAAAGGACUAGAAUGAACCGAAU___AUGGUAAUUAGUUUAAAC__AAAACAAAUGAUUUCGACUCAUUAGAUUAUGAUUA_A__UCAUAAUUACCAA___AUGCCCCUAAUCUACAUAAAUAUUAUACUAGCAUUCACCAUAUCACUUCUAGGAAUACUAAUAUAUCGAUCACACCUAAUAUCCUCCCUACUAUGCCUAGAAGGAAUAAUACUAUCACUAUUUAUC
-...(((((.........(((....((.((............(((((....((((.......)))).(((((.......)))))....(((((.......)))))..))))).....................................................(((.....)))......)).))...))).........(((.(((....))).)))..............)))))... (-28.55 =  -5.61 + -22.94)
