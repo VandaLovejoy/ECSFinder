@@ -1,0 +1,162 @@
+dkiss.o: dkiss.c dkiss.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/math.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/features.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/sys/cdefs.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/wordsize.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/gnu/stubs.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/gnu/stubs-64.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/huge_val.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/huge_valf.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/huge_vall.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/inf.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/nan.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/mathdef.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/mathcalls.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/mathinline.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/stdio.h \
+ /home/vandalovejoy/anaconda3/lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/include/stddef.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/types.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/typesizes.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/libio.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/_G_config.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/wchar.h \
+ /home/vandalovejoy/anaconda3/lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/include/stdarg.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/stdio_lim.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/sys_errlist.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/stdio.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/stdio2.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/stdlib.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/waitflags.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/waitstatus.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/endian.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/endian.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/byteswap.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/sys/types.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/time.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/sys/select.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/select.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/sigset.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/time.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/sys/sysmacros.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/pthreadtypes.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/alloca.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/stdlib.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/string.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/xlocale.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/string.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/string2.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/string3.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/errno.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/errno.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/linux/errno.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/asm/errno.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/asm-generic/errno.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/asm-generic/errno-base.h
+
+dkiss.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/math.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/features.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/sys/cdefs.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/wordsize.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/gnu/stubs.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/gnu/stubs-64.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/huge_val.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/huge_valf.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/huge_vall.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/inf.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/nan.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/mathdef.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/mathcalls.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/mathinline.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/stdio.h:
+
+/home/vandalovejoy/anaconda3/lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/include/stddef.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/types.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/typesizes.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/libio.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/_G_config.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/wchar.h:
+
+/home/vandalovejoy/anaconda3/lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/include/stdarg.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/stdio_lim.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/sys_errlist.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/stdio.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/stdio2.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/stdlib.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/waitflags.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/waitstatus.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/endian.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/endian.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/byteswap.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/sys/types.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/time.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/sys/select.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/select.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/sigset.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/time.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/sys/sysmacros.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/pthreadtypes.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/alloca.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/stdlib.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/string.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/xlocale.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/string.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/string2.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/string3.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/errno.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/errno.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/linux/errno.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/asm/errno.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/asm-generic/errno.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/asm-generic/errno-base.h:

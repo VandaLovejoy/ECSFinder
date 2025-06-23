@@ -1,0 +1,1 @@
+special_const.o: special_const.c

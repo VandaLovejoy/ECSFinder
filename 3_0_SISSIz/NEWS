@@ -1,0 +1,5 @@
+1)    default:   new version :    SISSIz     examples/rRNA.aln  sissiz-di	examples/rRNA.aln	7	158	0.7286	0.7269	0.0144	-16.88	-8.64	3.52	-2.34
+2)    -a opt:    old  version:    SISSIz -a  examples/rRNA.aln  sissiz-di	examples/rRNA.aln	7	158	0.7286	0.7251	0.0128	-17.17	-7.29	2.91	-3.40
+3)    -j opt:    ribosom  mat:    SISSIz -j  examples/rRNA.aln  sissiz-di	examples/rRNA.aln      7	158	0.7286	0.7256	0.0142	-44.55	-31.73	5.45	-2.35
+4)    -b opt:    estimated NJ-TREE:  You can print out the Phylogenetic Trees as well into aln.tree.  
+

@@ -1,0 +1,54 @@
+energy_par.o: energy_par.c ../config.h energy_const.h \
+ /home/vandalovejoy/anaconda3/lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/include-fixed/limits.h \
+ /home/vandalovejoy/anaconda3/lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/include-fixed/syslimits.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/limits.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/features.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/sys/cdefs.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/wordsize.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/gnu/stubs.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/gnu/stubs-64.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/posix1_lim.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/local_lim.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/linux/limits.h \
+ /home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/posix2_lim.h \
+ intl11.h intl11dH.h intl21.h intl21dH.h intl22.h intl22dH.h
+
+../config.h:
+
+energy_const.h:
+
+/home/vandalovejoy/anaconda3/lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/include-fixed/limits.h:
+
+/home/vandalovejoy/anaconda3/lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/include-fixed/syslimits.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/limits.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/features.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/sys/cdefs.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/wordsize.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/gnu/stubs.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/gnu/stubs-64.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/posix1_lim.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/local_lim.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/linux/limits.h:
+
+/home/vandalovejoy/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include/bits/posix2_lim.h:
+
+intl11.h:
+
+intl11dH.h:
+
+intl21.h:
+
+intl21dH.h:
+
+intl22.h:
+
+intl22dH.h:
