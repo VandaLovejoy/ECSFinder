@@ -2,7 +2,7 @@
 # Build artifacts
 ##############################
 /target/
-
+!/target/ECSFinder-1.0.0.jar
 ##############################
 # IDE / Editor config
 ##############################
