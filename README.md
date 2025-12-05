@@ -121,9 +121,6 @@ which SISSIz
 SISSIz --version
 ```
 
-**Authors:**
-- Tanja Gesell <tanja.gesell@univie.ac.at>
-- Stefan Washietl <wash@tbi.univie.ac.at>
 
 #### 2. Install ViennaRNA Package
 
@@ -566,12 +563,22 @@ Nucleic Acids Research, Volume 53, Issue 15, 28 August 2025, gkaf780, https://do
 
 ## Acknowledgments
 
-ECSFinder integrates several excellent bioinformatics tools:
+ECSFinder integrates and builds upon several excellent bioinformatics tools and R packages:
 
-- **SISSIz** - Tanja Gesell, Stefan Washietl
-- **ViennaRNA Package** - Hofacker et al.
-- **R-scape** - Rivas Lab
-- **R caret & randomForest** - Kuhn et al., Liaw & Wiener
+#### SISSIz
+Gesell T, Washietl S. Dinucleotide controlled null models for comparative RNA gene prediction. *BMC Bioinformatics*. 2008;9:474. doi: 10.1186/1471-2105-9-474
+
+#### ViennaRNA Package (RNALalifold / RNAalifold)
+Lorenz R, Bernhart SH, Höner zu Siederdissen C, Tafer H, Flamm C, Stadler PF, Hofacker IL. ViennaRNA Package 2.0. *Algorithms for Molecular Biology*. 2011;6:26. doi: 10.1186/1748-7188-6-26
+
+#### R-scape
+Rivas E, Clements J, Eddy SR. A statistical test for conserved RNA structure shows lack of evidence for structure in lncRNAs. *Nucleic Acids Research*. 2017;45(13):8189–8205. doi: 10.1093/nar/gkx386
+
+#### R caret
+Kuhn M. Building Predictive Models in R Using the caret Package. *Journal of Statistical Software*. 2008;28(5):1–26. doi: 10.18637/jss.v028.i05
+
+#### R randomForest
+Liaw A, Wiener M. Classification and regression by randomForest. *R News*. 2002;2(3):18–22.
 
 ---
 
