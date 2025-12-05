@@ -1,132 +1,672 @@
-
-
-
-<p align="center" width="100%">
-    <img width="25%" src="https://user-images.githubusercontent.com/44384386/195381940-680064be-d53a-45b6-a5e1-a80ff1cb804e.jpg"> 
-</p>
-
 # ECSFinder
 
-ECSFinder is a tool designed to scan multiple sequence alignments for **evolutionarily conserved RNA secondary structures**.
+<p align="center">
+    <img width="25%" src="https://user-images.githubusercontent.com/44384386/195381940-680064be-d53a-45b6-a5e1-a80ff1cb804e.jpg" alt="ECSFinder Logo"> 
+</p>
 
-Given a set of MAF files, ECSFinder:
+<p align="center">
+    <strong>A machine learning-powered tool for detecting evolutionarily conserved RNA secondary structures</strong>
+</p>
 
-1. **Merges and filters alignments** (removing ancestor sequences and duplicates).
-2. **Refines local windows** and predicts consensus structures with **RNALalifold**.
-3. **Assesses structural conservation** using **SISSIz**, testing whether observed structure is more likely than expected by chance.
-4. **Computes structural features** with **RNAalifold** (MFE, pseudo-energy) and sequence conservation metrics (MPI, Shannon entropy, gaps, GC).
-5. **Evaluates covariation** using **R-scape**, extracting E-values and base-pair counts for significant helices.
-6. **Applies a random forest classifier** (via R) to score each candidate element as likely **true positive (TP)** or **false positive (FP)** based on:
-  - E-value
-  - Number of significant base pairs
-  - Minimal free energy
-  - Pseudo-energy
-  - Sequence conservation (MPI)
-  - Standard deviation of null energies
-  - Average MFE from the SISSIz null background
-  - Z-score from SISSIz
+---
 
-The result is a robust framework that not only **detects** but also **prioritizes and validates** conserved RNA structures across multi-species alignments. Outputs are suitable for visualization in genome browsers and downstream analysis pipelines.
+## Overview
 
+ECSFinder is a comprehensive bioinformatics pipeline that identifies and validates **evolutionarily conserved RNA secondary structures** (ECS) across multiple species alignments. By integrating structural prediction, statistical testing, and machine learning classification, ECSFinder provides robust detection and prioritization of functional RNA elements in genomic sequences.
+
+### Key Features
+
+- **Multi-species alignment processing** - Handles MAF format with automated filtering
+- **Consensus structure prediction** - Uses RNALalifold for local folding predictions
+- **Statistical validation** - SISSIz tests structural conservation significance
+- **Machine learning classification** - Random forest model distinguishes true positives from false positives
+- **Covariation analysis** - R-scape detects compensatory mutations in base pairs
+- **Comprehensive feature extraction** - Computes 10+ structural and sequence conservation metrics
+
+### How It Works
+
+```
+MAF Files → Merge & Filter → Local Structure Prediction → Conservation Testing → 
+Feature Extraction → Random Forest Classification → Validated ECS Elements
+```
+
+**Pipeline Steps:**
+
+1. **Merge and filter alignments** - Remove ancestor sequences and duplicates
+2. **Predict consensus structures** - RNALalifold identifies local structural windows
+3. **Assess structural conservation** - SISSIz tests if structure is more conserved than expected by chance
+4. **Compute structural features** - RNAalifold calculates MFE, pseudo-energy, and sequence metrics
+5. **Evaluate covariation** - R-scape detects significant compensatory base pair mutations
+6. **Classify candidates** - Random forest scores elements as likely true or false positives
+
+**Classification Features:**
+
+The random forest model uses 9 key features:
+- E-value from R-scape
+- Number of significant covarying base pairs
+- Minimum free energy (MFE)
+- Pseudo-energy
+- Mean pairwise identity (MPI)
+- Standard deviation of null energies
+- Average MFE from SISSIz background
+- Z-score from SISSIz
+- Structure conservation index (SCI)
+
+---
 
 ## Table of Contents
 
 - [Installation](#installation)
-  - [SISSIz 3.0](#sissiz-30)
-  - [RNALalifold](#rnalalifold)
-  - [ECSFinder](#ecsfinder)
-  - [R-scape](#r-scape)
-  - [R](#r)
+  - [Prerequisites](#prerequisites)
+  - [Quick Start](#quick-start)
+  - [Detailed Setup](#detailed-setup)
 - [Usage](#usage)
-  - [Running as a class](#running-as-a-class)
-  - [Running from JAR](#running-from-jar)
-- [Reference species (`-ref`)](#reference-species--ref)
-- [Output](#output)
-- [Example](#example)
+  - [Basic Usage](#basic-usage)
+  - [Command-Line Options](#command-line-options)
+  - [Advanced Examples](#advanced-examples)
+- [Reference Species Configuration](#reference-species-configuration)
+- [Output Files](#output-files)
+- [Interpreting Results](#interpreting-results)
+- [Troubleshooting](#troubleshooting)
+- [Citation](#citation)
+- [License](#license)
 
+---
 
 ## Installation
 
-### SISSIz 3.0
+### Prerequisites
 
-Install SISSIz according to its README.
+**Required Software:**
 
-Authors:  
-Tanja Gesell `<tanja.gesell@univie.ac.at>`  
-Stefan Washietl `<wash@tbi.univie.ac.at>`  
-Lorenz Perschy `<NA>`
+| Tool | Version | Purpose |
+|------|---------|---------|
+| Java | 11+ | Run ECSFinder |
+| SISSIz | 3.0 | Structural conservation testing |
+| ViennaRNA | 2.5+ | RNA structure prediction |
+| R-scape | Latest | Covariation analysis |
+| R | 4.3+ | Random forest classification |
+| Maven | 3.6+ | Build from source (optional) |
 
-Make sure the `SISSIz` binary is in your `PATH` (ECSFinder calls it via `which SISSIz`).
+**R Packages:**
+```r
+install.packages(c("caret", "randomForest"))
+```
 
-### RNALalifold
+### Quick Start
 
-Install the ViennaRNA package from the [ViennaRNA website](https://www.tbi.univie.ac.at/RNA/) and follow the [installation instructions](https://www.tbi.univie.ac.at/RNA/documentation.html#install):
+**Option 1: Use Prebuilt JAR (Recommended)**
 
 ```bash
+# Clone the repository
+git clone https://github.com/yourusername/ECSFinder.git
+cd ECSFinder
+
+# Run with the prebuilt JAR (using default Homo_sapiens reference)
+java -jar target/ECSFinder-1.0.0.jar \
+  -o output_directory \
+  -i input.maf
+
+# Or specify a different reference species
+java -jar target/ECSFinder-1.0.0.jar \
+  -ref hg38 \
+  -o output_directory \
+  -i input.maf
+```
+
+**Option 2: Build from Source**
+
+```bash
+# Clone and build
+git clone https://github.com/yourusername/ECSFinder.git
+cd ECSFinder
+mvn clean package
+
+# Run with default reference (Homo_sapiens)
+java -jar target/ECSFinder-1.0.0.jar -o output -i input.maf
+
+# Or specify a different reference
+java -jar target/ECSFinder-1.0.0.jar -ref hg38 -o output -i input.maf
+```
+
+### Detailed Setup
+
+#### 1. Install SISSIz 3.0
+
+```bash
+# Download and install SISSIz
+# Follow instructions from: https://www.tbi.univie.ac.at/~wash/SISSIz/
+
+# Verify installation
+which SISSIz
+SISSIz --version
+```
+
+**Authors:**
+- Tanja Gesell <tanja.gesell@univie.ac.at>
+- Stefan Washietl <wash@tbi.univie.ac.at>
+
+#### 2. Install ViennaRNA Package
+
+```bash
+# Download from https://www.tbi.univie.ac.at/RNA/
+wget https://www.tbi.univie.ac.at/RNA/download/sourcecode/2_5_x/ViennaRNA-2.5.1.tar.gz
+
+# Extract and install
 tar -zxvf ViennaRNA-2.5.1.tar.gz
 cd ViennaRNA-2.5.1
 ./configure
 make
 sudo make install
 
-Ensure that RNALalifold and RNAalifold are both on your PATH:
-
-### ECSFinder
+# Verify installation
+which RNALalifold
+which RNAalifold
+RNALalifold --version
 ```
-cd ECSFinder/src
-javac ECSFinder.java
+
+#### 3. Install R-scape
+
+```bash
+# Download from http://eddylab.org/R-scape/
+# Follow installation instructions for your platform
+
+# Verify installation
+which R-scape
+R-scape -h
 ```
-### R-scape
 
-Download the source code [website](http://eddylab.org/R-scape/)
-### R
+#### 4. Set Up R Environment
 
-Please use the 4.3 or a more recent version of R. Make sure the caret and randomForest package are installed
+```bash
+# Check R version (must be 4.3+)
+R --version
+
+# Install required packages
+R -e 'install.packages(c("caret", "randomForest"), repos="http://cran.rstudio.com/")'
+
+# Verify Rscript is available
+which Rscript
+```
+
+#### 5. Verify ECSFinder Installation
+
+```bash
+cd ECSFinder
+
+# Test with example data
+java -jar target/ECSFinder-1.0.0.jar \
+  -ref hg38 \
+  -o test_output \
+  -i example/test.maf \
+  -c 2
+```
+
+---
 
 ## Usage
-### ECSFinder
+
+### Basic Usage
+
+**Minimum required arguments:**
+
+```bash
+# Using default reference species (Homo_sapiens)
+java -jar target/ECSFinder-1.0.0.jar \
+  -o <output_directory> \
+  -i <input.maf_or_directory>
+
+# Or specify a different reference species
+java -jar target/ECSFinder-1.0.0.jar \
+  -ref <reference_species> \
+  -o <output_directory> \
+  -i <input.maf_or_directory>
 ```
-java ECSFinder [options] -o output/directory -i input.maf (last parameter must be -i, absolute path required)
- Options:
-   -c int number of CPUs for calculations (default 4)
-   -g int max gap percentage of sequences for 2D prediction (default 50)
-   -sszr double report SISSIzhits below this Z-score (default -3)
-   -v verbose (messy but detailed) output
-   -mafft realign the maf file before analysis using mafft-ginsi
+
+**Example:**
+
+```bash
+# Using default Homo_sapiens reference
+java -jar target/ECSFinder-1.0.0.jar \
+  -o results/human_ECS \
+  -i alignments/
+
+# Using hg38 reference
+java -jar target/ECSFinder-1.0.0.jar \
+  -ref hg38 \
+  -o results/human_ECS \
+  -i alignments/
 ```
 
-## Output
-Three types of results are produced:
+### Command-Line Options
 
-* `output.maf` file containing the merged MAF file with the ancestor sequences and duplicate species removed.
-* `predicted_ECS.csv` file with predictions made.
-* A directory called `aln` containing:
-    * A clustal file, e.g., `out_directory/aln/X_9958021_9958096_11_92.2_0.1_0.16_66.8_0.4_304_+.aln`.
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `-i` | String | **Required** | Input MAF file or directory containing MAF files |
+| `-o` | String | **Required** | Output directory for results |
+| `-ref` | String | Homo_sapiens | Reference species identifier (see [Reference Species](#reference-species-configuration)) |
+| `-c` | Integer | 4 | Number of CPU cores for parallel processing |
+| `-g` | Integer | 50 | Maximum gap percentage allowed in alignments (0-100) |
+| `-sszr` | Double | -3.0 | SISSIz Z-score threshold (more negative = more stringent) |
+| `-mpi` | Integer | 50 | Minimum mean pairwise identity percentage (0-100) |
+| `-mafft` | Flag | false | Realign each block with MAFFT-GINSI before analysis |
+| `-v` | Flag | false | Enable verbose output for debugging |
 
-### File Name:
-***
+### Advanced Examples
 
-     1. Name of chromosome (X)
-     2. Start loci (9958021)
-     3. End loci (9958096)
-     4. Number species (11)
-     5. Mean pairwise identity (92.2)
-     6. Standard deviation (0.1)
-     7. Average Shannon entropy (0.16)
-     8. GC content (66.8)
-     9. Gap content (0.4)
-    10. Z-score multiplied by -100 (304)
-    11. Direction of the strand (+)
- ***   
+#### Example 1: High-Stringency Analysis
 
-*  The genomic coordinates (.bed format) of ECSs are also written to the SDOUT
+Detect only the most conserved structures with high sequence identity:
 
-## Example
- ```
-java -jar target/ECSFinder.jar -sszr 0.0 -o TEST -i src/test/resources
-chrm	start	end	Num_species	MPI	sd	mean_shannon	gc	gap	zscore	strand	prob
-5	RF00017	318	435	5	60.5	0.3	0.73	57.0	1.0	655	+	0.84
-5	RF00017	273	426	5	58.1	0.3	0.77	59.2	0.7	1317	+	0.94
-
-...
+```bash
+java -jar target/ECSFinder-1.0.0.jar \
+  -ref homo_sapiens \
+  -sszr -5.0 \
+  -mpi 70 \
+  -g 30 \
+  -c 16 \
+  -o high_confidence_results \
+  -i primate_alignments/
 ```
+
+#### Example 2: Permissive Search
+
+Cast a wider net for potential RNA structures:
+
+```bash
+java -jar target/ECSFinder-1.0.0.jar \
+  -ref mm10 \
+  -sszr -2.0 \
+  -mpi 40 \
+  -g 60 \
+  -c 8 \
+  -o exploratory_results \
+  -i mammal_alignments/
+```
+
+#### Example 3: With Realignment
+
+Use MAFFT to improve alignment quality before structure prediction:
+
+```bash
+java -jar target/ECSFinder-1.0.0.jar \
+  -ref hg38 \
+  -mafft \
+  -c 12 \
+  -o realigned_results \
+  -i input.maf
+```
+
+#### Example 4: Verbose Debugging
+
+Get detailed output for troubleshooting:
+
+```bash
+java -jar target/ECSFinder-1.0.0.jar \
+  -ref hg38 \
+  -v \
+  -o debug_output \
+  -i problem_alignment.maf \
+  2>&1 | tee ecsfinder.log
+```
+
+#### Example 5: Redirect BED Output
+
+Save the summary table to a file:
+
+```bash
+java -jar target/ECSFinder-1.0.0.jar \
+  -ref hg38 \
+  -o results \
+  -i input.maf \
+  > results/ecs_summary.bed
+```
+
+---
+
+## Reference Species Configuration
+
+ECSFinder requires a **reference species** to convert alignment coordinates to genomic coordinates. By default, ECSFinder uses **Homo_sapiens** as the reference species. You can override this using the `-ref` parameter.
+
+### Understanding MAF Species IDs
+
+In MAF files, species are identified in `s` lines:
+
+```
+s Homo_sapiens.chr1  12345  200 + 248956422 ACUG...
+s panTro6.chr1       23456  200 + 227471971 ACUG...
+s rheMac10.chr1      34567  200 + 223616942 ACUG...
+```
+
+The species ID is everything before the first space (e.g., `Homo_sapiens.chr1`, `panTro6.chr1`).
+
+**Default behavior:** If `-ref` is not specified, ECSFinder looks for sequences matching "Homo_sapiens".
+
+### Substring Matching (Simple)
+
+If `-ref` is a **plain string**, ECSFinder performs case-insensitive substring matching:
+
+```bash
+# Default - matches Homo_sapiens.chr1, Homo_sapiens.chr2, etc.
+# (No -ref needed, this is the default)
+java -jar target/ECSFinder-1.0.0.jar -o output -i input.maf
+
+# Matches: hg38.chr1, hg38.chr2, hg38.chrX, etc.
+-ref hg38
+
+# Explicitly specify Homo_sapiens
+-ref Homo_sapiens
+
+# Matches: mm10.chr1, mm10.chr2, etc.
+-ref mm10
+```
+
+### Regular Expression Matching (Advanced)
+
+For precise control, wrap your pattern in `/slashes/` to use regex:
+
+```bash
+# Match only sequences starting with "homo_sapiens."
+-ref "/^homo_sapiens\./"
+
+# Match either hg38 or GRCh38 assemblies
+-ref "/^(hg38|GRCh38)\./"
+
+# Match human chromosome 1 only
+-ref "/^hg38\.chr1$/"
+
+# Match autosomes only (exclude X, Y, M)
+-ref "/^hg38\.chr[0-9]+$/"
+```
+
+### Common Reference Species
+
+| Species | Assembly | Substring | Regex Example |
+|---------|----------|-----------|---------------|
+| Human (default) | Homo_sapiens | `Homo_sapiens` | `/^Homo_sapiens\./` |
+| Human | GRCh38/hg38 | `hg38` | `/^hg38\./` |
+| Mouse | GRCm39/mm39 | `mm39` | `/^mm39\./` |
+| Rat | mRatBN7 | `rn7` | `/^rn7\./` |
+| Zebrafish | GRCz11 | `danRer11` | `/^danRer11\./` |
+| Fruit fly | BDGP6 | `dm6` | `/^dm6\./` |
+
+### Troubleshooting Reference Species
+
+**Problem:** "No reference species found" warnings
+
+```bash
+# Use verbose mode to see what species IDs are in your MAF
+java -jar target/ECSFinder-1.0.0.jar -v -o out -i input.maf 2>&1 | grep "species"
+
+# Check your MAF file directly
+grep "^s " input.maf | cut -d' ' -f2 | sort -u
+```
+
+**Solution:** Adjust `-ref` to match the actual species IDs in your file, or omit `-ref` to use the default Homo_sapiens reference.
+
+---
+
+## Output Files
+
+ECSFinder creates several output files in the specified output directory:
+
+### Directory Structure
+
+```
+output_directory/
+├── output.maf              # Merged and filtered alignment
+├── final.csv               # Feature matrix for all candidates
+├── predictions.csv         # Random forest predictions
+└── aln/                    # Alignment files (TP only)
+    ├── chr1_12345_12400_10_85.2_0.2_0.45_55.1_0.3_450_+.aln
+    ├── chr1_12345_12400_10_85.2_0.2_0.45_55.1_0.3_450_+_0001.stk
+    ├── chr1_12345_12400_10_85.2_0.2_0.45_55.1_0.3_450_+_0001.power
+    └── ...
+```
+
+### Main Output Files
+
+#### 1. `output.maf`
+
+Merged MAF alignment with:
+- Ancestor sequences removed
+- Duplicate species filtered
+- Ready for downstream analysis
+
+#### 2. `final.csv`
+
+Feature matrix with columns:
+
+| Column | Description |
+|--------|-------------|
+| `name_file` | Alignment identifier |
+| `min_energy` | Minimum free energy (kcal/mol) |
+| `pseudo_energy` | Normalized pseudo-energy |
+| `log_min_evalue` | Log₁₀ of minimum E-value from R-scape |
+| `covarying_bp` | Number of significant covarying base pairs |
+| `MPI` | Mean pairwise identity (%) |
+| `average_MFE_sample` | Mean MFE from null background |
+| `sd_sample` | Standard deviation of null energies |
+| `zscore` | Z-score from SISSIz |
+| `sci` | Structure conservation index |
+
+#### 3. `predictions.csv`
+
+Random forest predictions:
+
+```csv
+name_file,Predicted_Probabilities,Predicted_Class
+chr5_RF00017_273_426_5_58.1_0.3_0.77_59.2_0.7_1317_+.aln,0.94,TP
+chr5_RF00017_318_435_5_60.5_0.3_0.73_57.0_1.0_655_+.aln,0.84,TP
+```
+
+- **Predicted_Probabilities**: Confidence score (0-1)
+- **Predicted_Class**: TP (true positive) or FP (false positive)
+
+⚠️ **Note:** Only alignments classified as TP are retained in the `aln/` directory.
+
+#### 4. Alignment Files (`aln/` directory)
+
+For each true positive ECS:
+
+**`.aln` file** - ClustalW format alignment
+
+### Alignment Filename Convention
+
+Filenames encode key features:
+
+```
+chr5_9958021_9958096_11_92.2_0.1_0.16_66.8_0.4_304_+.aln
+│    │       │        │  │    │   │    │    │   │   │
+│    │       │        │  │    │   │    │    │   │   └─ Strand
+│    │       │        │  │    │   │    │    │   └───── Z-score × -100
+│    │       │        │  │    │   │    │    └───────── Gap content
+│    │       │        │  │    │   │    └────────────── GC content (%)
+│    │       │        │  │    │   └─────────────────── Mean Shannon entropy
+│    │       │        │  │    └─────────────────────── SD of MPI
+│    │       │        │  └──────────────────────────── Mean pairwise identity (%)
+│    │       │        └─────────────────────────────── Number of species
+│    │       └──────────────────────────────────────── End coordinate
+│    └──────────────────────────────────────────────── Start coordinate
+└───────────────────────────────────────────────────── Chromosome
+```
+
+**Redirect to file:**
+
+```bash
+java -jar target/ECSFinder-1.0.0.jar ... > ecs_predictions.bed
+```
+---
+
+## Interpreting Results
+
+### Understanding Predictions
+
+**True Positive (TP):**
+- High confidence ECS element
+- Shows strong structural conservation
+- Contains significant covarying base pairs
+- Likely to be functionally important
+
+**False Positive (FP):**
+- Low confidence candidate
+- Structure may be artifact or poorly conserved
+- Lacks strong covariation signal
+- Automatically removed from output
+
+### Key Metrics
+
+**Z-score (from SISSIz):**
+- Measures structural conservation vs. random expectation
+- More negative = more conserved
+- Typical threshold: -3.0 to -5.0
+
+**MPI (Mean Pairwise Identity):**
+- Sequence conservation level (%)
+- Higher = more conserved sequences
+- Typical range: 50-90%
+
+**Probability Score:**
+- Random forest confidence (0-1)
+- > 0.679 typically classified as TP
+- > 0.85 indicates high confidence
+
+**Covarying Base Pairs:**
+- Number of compensatory mutations
+- Strong evidence of structural constraint
+- More pairs = stronger evidence
+
+### Quality Control
+
+**Good results typically show:**
+- Z-scores < -3.0
+- MPI between 50-90%
+- Multiple covarying base pairs
+- Probability > 0.7
+- Low gap content (< 30%)
+
+**Warning signs:**
+- Very high MPI (> 95%) - may lack variation for covariation analysis
+- Very low MPI (< 40%) - alignment may be unreliable
+- High gap content (> 50%) - alignment quality issues
+- No covarying pairs - weak structural evidence
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+**Problem: "No reference species found in alignment block"**
+
+```bash
+# Check species IDs in your MAF
+grep "^s " input.maf | cut -d' ' -f2 | sort -u
+
+# Adjust -ref parameter to match
+java -jar target/ECSFinder-1.0.0.jar -ref "correct_species_id" ...
+```
+
+**Problem: "SISSIz not found"**
+
+```bash
+# Ensure SISSIz is in PATH
+export PATH=$PATH:/path/to/sissiz/bin
+which SISSIz
+```
+
+**Problem: "RNALalifold command not found"**
+
+```bash
+# Install or add ViennaRNA to PATH
+export PATH=$PATH:/usr/local/bin
+which RNALalifold
+```
+
+**Problem: "R script failed"**
+
+```bash
+# Check R packages are installed
+R -e 'library(caret); library(randomForest)'
+
+# Verify Rscript location
+which Rscript
+```
+
+**Problem: Out of memory**
+
+```bash
+# Increase Java heap size
+java -Xmx16G -jar target/ECSFinder-1.0.0.jar ...
+```
+
+**Problem: Very slow processing**
+
+```bash
+# Increase CPU cores
+-c 16
+
+# Reduce input size or increase thresholds
+-mpi 60  # Higher sequence identity threshold
+-sszr -4.0  # More stringent structural conservation
+```
+
+### Getting Help
+
+For issues not covered here:
+
+1. **Enable verbose mode:** `-v` flag provides detailed diagnostic information
+2. **Check log files:** Review error messages carefully
+3. **Verify input format:** Ensure MAF files are properly formatted
+4. **Test with example data:** Use provided example files to verify installation
+
+---
+
+## Repository Structure
+
+```
+ECSFinder/
+├── src/                          # Java source code
+│   └── ca/smithlab/vandalovejoy/ecsfinder/
+│       └── ECSFinder.java        # Main class
+├── target/
+│   └── ECSFinder-1.0.0.jar      # Prebuilt executable JAR
+├── RF/                           # Random forest model
+│   ├── final_rf_model.rds       # Trained model
+│   └── predictions_ECSFinder.R  # Prediction script
+├── 3_0_SISSIz/                  # SISSIz resources
+├── rfam_families/               # Rfam validation data
+├── hybrid_blocks/               # Precomputed alignment blocks
+├── example/                     # Example data
+│   └── test.maf
+├── pom.xml                      # Maven configuration
+└── README.md                    # This file
+```
+
+---
+
+## Citation
+
+If you use ECSFinder in your research, please cite:
+
+```
+Vanda Gaonac’h-Lovejoy, John S Mattick, Martin Sauvageau, Martin A Smith, 
+ECSFinder: optimized prediction of evolutionarily conserved RNA secondary structures from genome sequences, 
+Nucleic Acids Research, Volume 53, Issue 15, 28 August 2025, gkaf780, https://doi.org/10.1093/nar/gkaf780
+```
+
+---
+
+## Acknowledgments
+
+ECSFinder integrates several excellent bioinformatics tools:
+
+- **SISSIz** - Tanja Gesell, Stefan Washietl
+- **ViennaRNA Package** - Hofacker et al.
+- **R-scape** - Rivas Lab
+- **R caret & randomForest** - Kuhn et al., Liaw & Wiener
+
+---
+
+**Version:** 1.0.0  
+**Last Updated:** December 2025

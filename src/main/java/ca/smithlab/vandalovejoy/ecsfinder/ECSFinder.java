@@ -572,7 +572,9 @@ public class ECSFinder {
                                              ArrayList<String[]> associativeList,
                                              List<Future<?>> futures,
                                              ExecutorService multiThreads) {
-        System.out.println("[DEBUG] Processing Stockholm: " + stockholmFile.getName());
+        if(VERBOSE) {
+            System.out.println("[DEBUG] Processing Stockholm: " + stockholmFile.getName());
+        }
         String result = "";
 
         if (MAFFT) {
@@ -697,8 +699,10 @@ public class ECSFinder {
         if (Integer.parseInt(arrayLociChrm[2]) - Integer.parseInt(arrayLociChrm[1]) < 50) {
             return;
         }
-        System.out.println("[DEBUG] Creating ScanItFast job for block = " + Arrays.toString(arrayName)
-                + " on file result key = " + result);
+        if(VERBOSE) {
+            System.out.println("[DEBUG] Creating ScanItFast job for block = " + Arrays.toString(arrayName)
+                    + " on file result key = " + result);
+        }
 
         ScanItFast aln = new ScanItFast(associativeList, arrayLociChrm,
                 new File(OUT_PATH), SSZBINARY, VERBOSE);
@@ -1164,7 +1168,9 @@ public class ECSFinder {
 
     private static void runRNALalifold(String inputFilePath)
             throws IOException, InterruptedException {
-        System.out.println("[DEBUG] About to run RNALalifold on FASTA: " + inputFilePath);
+        if(VERBOSE) {
+            System.out.println("[DEBUG] About to run RNALalifold on FASTA: " + inputFilePath);
+        }
         String outputFilePath = OUT_PATH + "/stockholm";
         List<String> command;
 
