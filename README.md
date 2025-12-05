@@ -14,14 +14,6 @@
 
 ECSFinder is a comprehensive bioinformatics pipeline that identifies and validates **evolutionarily conserved RNA secondary structures** (ECS) across multiple species alignments. By integrating structural prediction, statistical testing, and machine learning classification, ECSFinder provides robust detection and prioritization of functional RNA elements in genomic sequences.
 
-### Key Features
-
-- **Multi-species alignment processing** - Handles MAF format with automated filtering
-- **Consensus structure prediction** - Uses RNALalifold for local folding predictions
-- **Statistical validation** - SISSIz tests structural conservation significance
-- **Machine learning classification** - Random forest model distinguishes true positives from false positives
-- **Covariation analysis** - R-scape detects compensatory mutations in base pairs
-- **Comprehensive feature extraction** - Computes 10+ structural and sequence conservation metrics
 
 ### How It Works
 
@@ -30,14 +22,6 @@ MAF Files → Merge & Filter → Local Structure Prediction → Conservation Tes
 Feature Extraction → Random Forest Classification → Validated ECS Elements
 ```
 
-**Pipeline Steps:**
-
-1. **Merge and filter alignments** - Remove ancestor sequences and duplicates
-2. **Predict consensus structures** - RNALalifold identifies local structural windows
-3. **Assess structural conservation** - SISSIz tests if structure is more conserved than expected by chance
-4. **Compute structural features** - RNAalifold calculates MFE, pseudo-energy, and sequence metrics
-5. **Evaluate covariation** - R-scape detects significant compensatory base pair mutations
-6. **Classify candidates** - Random forest scores elements as likely true or false positives
 
 **Classification Features:**
 
@@ -106,12 +90,6 @@ cd ECSFinder
 java -jar target/ECSFinder-1.0.0.jar \
   -o output_directory \
   -i input.maf
-
-# Or specify a different reference species
-java -jar target/ECSFinder-1.0.0.jar \
-  -ref hg38 \
-  -o output_directory \
-  -i input.maf
 ```
 
 **Option 2: Build from Source**
@@ -122,20 +100,21 @@ git clone https://github.com/yourusername/ECSFinder.git
 cd ECSFinder
 mvn clean package
 
-# Run with default reference (Homo_sapiens)
-java -jar target/ECSFinder-1.0.0.jar -o output -i input.maf
 
-# Or specify a different reference
-java -jar target/ECSFinder-1.0.0.jar -ref hg38 -o output -i input.maf
+java -cp target/classes \
+  ca.smithlab.vandalovejoy.ecsfinder.ECSFinder \
+  [options] \
+  -o output/directory \
+  -i input.maf_or_dir
+
 ```
 
 ### Detailed Setup
 
 #### 1. Install SISSIz 3.0
+Use the directory 3_0_SISSIz and install SISSIz according to its README.
 
 ```bash
-# Download and install SISSIz
-# Follow instructions from: https://www.tbi.univie.ac.at/~wash/SISSIz/
 
 # Verify installation
 which SISSIz
@@ -169,7 +148,7 @@ RNALalifold --version
 
 ```bash
 # Download from http://eddylab.org/R-scape/
-# Follow installation instructions for your platform
+# Install R-scape according to its README.
 
 # Verify installation
 which R-scape
@@ -196,7 +175,6 @@ cd ECSFinder
 
 # Test with example data
 java -jar target/ECSFinder-1.0.0.jar \
-  -ref hg38 \
   -o test_output \
   -i example/test.maf \
   -c 2
@@ -233,7 +211,7 @@ java -jar target/ECSFinder-1.0.0.jar \
 
 # Using hg38 reference
 java -jar target/ECSFinder-1.0.0.jar \
-  -ref hg38 \
+  -ref pan_paniscus \
   -o results/human_ECS \
   -i alignments/
 ```
@@ -310,17 +288,6 @@ java -jar target/ECSFinder-1.0.0.jar \
   2>&1 | tee ecsfinder.log
 ```
 
-#### Example 5: Redirect BED Output
-
-Save the summary table to a file:
-
-```bash
-java -jar target/ECSFinder-1.0.0.jar \
-  -ref hg38 \
-  -o results \
-  -i input.maf \
-  > results/ecs_summary.bed
-```
 
 ---
 
@@ -500,41 +467,9 @@ java -jar target/ECSFinder-1.0.0.jar ... > ecs_predictions.bed
 
 ## Interpreting Results
 
-### Understanding Predictions
-
-**True Positive (TP):**
-- High confidence ECS element
-- Shows strong structural conservation
-- Contains significant covarying base pairs
-- Likely to be functionally important
-
-**False Positive (FP):**
-- Low confidence candidate
-- Structure may be artifact or poorly conserved
-- Lacks strong covariation signal
-- Automatically removed from output
 
 ### Key Metrics
 
-**Z-score (from SISSIz):**
-- Measures structural conservation vs. random expectation
-- More negative = more conserved
-- Typical threshold: -3.0 to -5.0
-
-**MPI (Mean Pairwise Identity):**
-- Sequence conservation level (%)
-- Higher = more conserved sequences
-- Typical range: 50-90%
-
-**Probability Score:**
-- Random forest confidence (0-1)
-- > 0.679 typically classified as TP
-- > 0.85 indicates high confidence
-
-**Covarying Base Pairs:**
-- Number of compensatory mutations
-- Strong evidence of structural constraint
-- More pairs = stronger evidence
 
 ### Quality Control
 
@@ -557,15 +492,6 @@ java -jar target/ECSFinder-1.0.0.jar ... > ecs_predictions.bed
 
 ### Common Issues
 
-**Problem: "No reference species found in alignment block"**
-
-```bash
-# Check species IDs in your MAF
-grep "^s " input.maf | cut -d' ' -f2 | sort -u
-
-# Adjust -ref parameter to match
-java -jar target/ECSFinder-1.0.0.jar -ref "correct_species_id" ...
-```
 
 **Problem: "SISSIz not found"**
 
@@ -573,14 +499,6 @@ java -jar target/ECSFinder-1.0.0.jar -ref "correct_species_id" ...
 # Ensure SISSIz is in PATH
 export PATH=$PATH:/path/to/sissiz/bin
 which SISSIz
-```
-
-**Problem: "RNALalifold command not found"**
-
-```bash
-# Install or add ViennaRNA to PATH
-export PATH=$PATH:/usr/local/bin
-which RNALalifold
 ```
 
 **Problem: "R script failed"**
@@ -610,16 +528,6 @@ java -Xmx16G -jar target/ECSFinder-1.0.0.jar ...
 -mpi 60  # Higher sequence identity threshold
 -sszr -4.0  # More stringent structural conservation
 ```
-
-### Getting Help
-
-For issues not covered here:
-
-1. **Enable verbose mode:** `-v` flag provides detailed diagnostic information
-2. **Check log files:** Review error messages carefully
-3. **Verify input format:** Ensure MAF files are properly formatted
-4. **Test with example data:** Use provided example files to verify installation
-
 ---
 
 ## Repository Structure
@@ -648,7 +556,6 @@ ECSFinder/
 ## Citation
 
 If you use ECSFinder in your research, please cite:
-
 ```
 Vanda Gaonac’h-Lovejoy, John S Mattick, Martin Sauvageau, Martin A Smith, 
 ECSFinder: optimized prediction of evolutionarily conserved RNA secondary structures from genome sequences, 
