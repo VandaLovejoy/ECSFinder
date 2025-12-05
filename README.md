@@ -5,24 +5,42 @@
     <img width="25%" src="https://user-images.githubusercontent.com/44384386/195381940-680064be-d53a-45b6-a5e1-a80ff1cb804e.jpg"> 
 </p>
 
-ECSFinder is a tool designed to scan multiple alignments for conserved RNA structures. It processes a set of MAF files, calculates key statistics, scans with SISSIz, and outputs BED coordinates of high-confidence predictions. The process begins by refining alignment boundaries using RNALalifold, which identifies locally stable RNA secondary structures. After this refinement, the alignments are analyzed with SISSIz to assess whether a predicted conserved structure is statistically more likely than expected by chance.
+# ECSFinder
 
-Following this, RNAalifold calculates the minimal free energy and pseudo-energy of the predicted structures, providing insights into their stability. R-scape is then used to evaluate the statistical significance of helices within the RNA structures, identifying significant base pairs that further validate the findings.
+ECSFinder is a tool designed to scan multiple sequence alignments for **evolutionarily conserved RNA secondary structures**.
 
-To enhance prediction accuracy, ECSFinder integrates a random forest model that predicts the likelihood of the identified RNA structures being true positives or false positives. This model considers the following features: E-value, the number of significant base pairs, minimal free energy, pseudo-energy, sequence conservation (MPI), standard deviation, the average MFE from null background from SISSIz and the Z-score.
+Given a set of MAF files, ECSFinder:
 
-The result is a robust framework that not only identifies but also validates conserved RNA structures across multiple sequence alignments, providing output that can be visualized and further analyzed using genome browsers and other bioinformatics tools.
+1. **Merges and filters alignments** (removing ancestor sequences and duplicates).
+2. **Refines local windows** and predicts consensus structures with **RNALalifold**.
+3. **Assesses structural conservation** using **SISSIz**, testing whether observed structure is more likely than expected by chance.
+4. **Computes structural features** with **RNAalifold** (MFE, pseudo-energy) and sequence conservation metrics (MPI, Shannon entropy, gaps, GC).
+5. **Evaluates covariation** using **R-scape**, extracting E-values and base-pair counts for significant helices.
+6. **Applies a random forest classifier** (via R) to score each candidate element as likely **true positive (TP)** or **false positive (FP)** based on:
+  - E-value
+  - Number of significant base pairs
+  - Minimal free energy
+  - Pseudo-energy
+  - Sequence conservation (MPI)
+  - Standard deviation of null energies
+  - Average MFE from the SISSIz null background
+  - Z-score from SISSIz
+
+The result is a robust framework that not only **detects** but also **prioritizes and validates** conserved RNA structures across multi-species alignments. Outputs are suitable for visualization in genome browsers and downstream analysis pipelines.
 
 
 ## Table of Contents
 
 - [Installation](#installation)
-    - [SISSIz](#sissiz)
-    - [RNALalifold](#rnalalifold)
-    - [ECSFinder](#ecsfinder)
-    - [R-scape](#r-scape)
-    - [R](#r)
+  - [SISSIz 3.0](#sissiz-30)
+  - [RNALalifold](#rnalalifold)
+  - [ECSFinder](#ecsfinder)
+  - [R-scape](#r-scape)
+  - [R](#r)
 - [Usage](#usage)
+  - [Running as a class](#running-as-a-class)
+  - [Running from JAR](#running-from-jar)
+- [Reference species (`-ref`)](#reference-species--ref)
 - [Output](#output)
 - [Example](#example)
 
@@ -31,20 +49,27 @@ The result is a robust framework that not only identifies but also validates con
 
 ### SISSIz 3.0
 
-Follow README instructions  
+Install SISSIz according to its README.
+
 Authors:  
-Tanja Gesell <tanja.gesell@univie.ac.at>  
-Stefan Washietl <wash@tbi.univie.ac.at>  
-Lorenz Perschy <NA>
+Tanja Gesell `<tanja.gesell@univie.ac.at>`  
+Stefan Washietl `<wash@tbi.univie.ac.at>`  
+Lorenz Perschy `<NA>`
+
+Make sure the `SISSIz` binary is in your `PATH` (ECSFinder calls it via `which SISSIz`).
+
 ### RNALalifold
-Download the package on the ViennaRNA package [website](https://www.tbi.univie.ac.at/RNA/) and follow the [instructions](https://www.tbi.univie.ac.at/RNA/documentation.html#install)
-```
+
+Install the ViennaRNA package from the [ViennaRNA website](https://www.tbi.univie.ac.at/RNA/) and follow the [installation instructions](https://www.tbi.univie.ac.at/RNA/documentation.html#install):
+
+```bash
 tar -zxvf ViennaRNA-2.5.1.tar.gz
 cd ViennaRNA-2.5.1
 ./configure
 make
 sudo make install
-```
+
+Ensure that RNALalifold and RNAalifold are both on your PATH:
 
 ### ECSFinder
 ```
