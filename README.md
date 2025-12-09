@@ -88,10 +88,7 @@ cd ECSFinder
 
 # Run with the prebuilt JAR (using default Homo_sapiens reference)
 java -jar target/ECSFinder-1.0.0.jar \
-<<<<<<< HEAD
-=======
   -mafft
->>>>>>> 2c00a36 (Fix RF path lookup and clarify example output; keep JAR in repo)
   -o output_directory \
   -i input.maf
 ```
