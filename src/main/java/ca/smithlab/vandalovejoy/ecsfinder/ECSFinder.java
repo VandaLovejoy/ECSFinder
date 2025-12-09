@@ -884,13 +884,37 @@ public class ECSFinder {
                 .getCodeSource()
                 .getLocation()
                 .getPath());
-        String jarDir = jarFile.getParent();
-        if (jarFile.isFile()) {
-            return new File(jarDir, "RF/").getAbsolutePath();
-        } else {
-            return new File("RF/").getAbsolutePath();
+
+        // jarDir is the directory containing the JAR, or the directory itself if not a file
+        File jarDir = jarFile.isFile() ? jarFile.getParentFile() : jarFile;
+
+        // Candidate locations for the RF directory
+        List<File> candidates = new ArrayList<>();
+        // 1) RF next to the JAR: target/RF
+        candidates.add(new File(jarDir, "RF"));
+        // 2) RF one level above the JAR: project-root/RF (your current layout)
+        if (jarDir.getParentFile() != null) {
+            candidates.add(new File(jarDir.getParentFile(), "RF"));
         }
+        // 3) RF in the current working directory
+        candidates.add(new File("RF"));
+
+        for (File c : candidates) {
+            if (c.isDirectory()) {
+                if (VERBOSE) {
+                    System.out.println("Using RF directory: " + c.getAbsolutePath());
+                }
+                return c.getAbsolutePath();
+            }
+        }
+
+        StringBuilder sb = new StringBuilder("Could not find RF directory with predictions_ECSFinder.R and final_rf_model.rds. Checked:\n");
+        for (File c : candidates) {
+            sb.append("  - ").append(c.getAbsolutePath()).append("\n");
+        }
+        throw new IOException(sb.toString());
     }
+
 
     /* ==============================
        MAF -> FASTA splitting (MAFFT pipeline)

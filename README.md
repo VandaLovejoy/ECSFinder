@@ -88,6 +88,10 @@ cd ECSFinder
 
 # Run with the prebuilt JAR (using default Homo_sapiens reference)
 java -jar target/ECSFinder-1.0.0.jar \
+<<<<<<< HEAD
+=======
+  -mafft
+>>>>>>> 2c00a36 (Fix RF path lookup and clarify example output; keep JAR in repo)
   -o output_directory \
   -i input.maf
 ```
@@ -383,9 +387,6 @@ output_directory/
 ├── predictions.csv         # Random forest predictions
 └── aln/                    # Alignment files (TP only)
     ├── chr1_12345_12400_10_85.2_0.2_0.45_55.1_0.3_450_+.aln
-    ├── chr1_12345_12400_10_85.2_0.2_0.45_55.1_0.3_450_+_0001.stk
-    ├── chr1_12345_12400_10_85.2_0.2_0.45_55.1_0.3_450_+_0001.power
-    └── ...
 ```
 
 ### Main Output Files
