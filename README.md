@@ -213,7 +213,10 @@ java -jar target/ECSFinder-1.0.0.jar \
   -o results/human_ECS \
   -i alignments/
 ```
+Input requirements
 
+Minimum sequences per alignment block: ECSFinder is designed for multi-species alignments and relies on evolutionary signal
+for conserved RNA structure/covariation. Alignment blocks with <5 sequences are skipped or with sequences fewer than 50 nucleotides in length.
 ### Command-Line Options
 
 | Option | Type | Default | Description |

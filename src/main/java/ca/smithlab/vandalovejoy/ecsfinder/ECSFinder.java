@@ -33,8 +33,7 @@ public class ECSFinder {
     // Map block_part -> FASTA chunk coordinates (MAFFT pipeline)
     private static Map<String, CoordinateInfo> coordinateMap = new HashMap<>();
 
-    // (Currently unused, but kept for compatibility)
-    private static Map<String, Integer> blockStartMap = new HashMap<>();
+    static final int MIN_SEQS_PER_BLOCK = 5;
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
@@ -57,7 +56,11 @@ public class ECSFinder {
                     " -mpi int   minimum MPI (percent identity) cutoff (default 50)\n" +
                     " -mafft     realign aln using MAFFT (default FALSE)\n" +
                     " -ref str   reference species (substring or /regex/) (default \"homo\")\n" +
-                    " -v         verbose (messy but detailed) output\n");
+                    " -v         verbose (messy but detailed) output\n"+
+            "Requirements / input expectations:\n" +
+                    " - Alignments should contain at least " + MIN_SEQS_PER_BLOCK + " sequences to provide enough\n" +
+                    "   evolutionary signal for structural conservation/covariation. Blocks with fewer sequences are skipped" +
+                    " or alignments with fewer than 50 nucleotides per species.\n" );
             System.exit(0);
         }
 
@@ -406,9 +409,21 @@ public class ECSFinder {
                 } else if (line.charAt(0) == 's') {
                     temp.append(line).append("@");
                 }
-            } else if (!temp.toString().isEmpty()
-                    && (temp.toString().split("@").length >= 3)
-                    && line.equals("")) {
+            } else if (line.equals("") && !temp.toString().isEmpty()) {
+                long nSeq = Arrays.stream(temp.toString().split("@"))
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .count();
+
+                if (nSeq < MIN_SEQS_PER_BLOCK) {
+                    if (VERBOSE) {
+                        System.out.println("[INFO] Skipping block " + blockAln +
+                                " (only " + nSeq + " sequences; need >= " + MIN_SEQS_PER_BLOCK + ")");
+                    }
+                    temp = new StringBuilder();
+                    continue;
+                }
+
 
                 // For non-MAFFT: run RNALalifold per block on a FASTA version of this block
                 if (!MAFFT) {
@@ -428,18 +443,29 @@ public class ECSFinder {
         }
         readFile.close();
 
-        // handle last block if file doesn't end with blank line
-        if (!temp.toString().isEmpty() && temp.toString().split("@").length >= 3) {
-            if (!MAFFT) {
-                try {
-                    runRNALalifoldOnBlock(temp.toString(), blockAln);
-                } catch (IOException | InterruptedException e) {
-                    System.err.println("RNALalifold failed on last block " + blockAln + ": " + e.getMessage());
-                    e.printStackTrace();
+// handle last block if file doesn't end with blank line
+        if (!temp.toString().isEmpty()) {
+            long nSeq = Arrays.stream(temp.toString().split("@"))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .count();
+
+            if (nSeq >= MIN_SEQS_PER_BLOCK) {
+                if (!MAFFT) {
+                    try {
+                        runRNALalifoldOnBlock(temp.toString(), blockAln);
+                    } catch (IOException | InterruptedException e) {
+                        System.err.println("RNALalifold failed on last block " + blockAln + ": " + e.getMessage());
+                        e.printStackTrace();
+                    }
                 }
+                iterateStockholm(temp.toString(), blockAln, futures, multiThreads);
+            } else if (VERBOSE) {
+                System.out.println("[INFO] Skipping last block " + blockAln +
+                        " (only " + nSeq + " sequences; need >= " + MIN_SEQS_PER_BLOCK + ")");
             }
-            iterateStockholm(temp.toString(), blockAln, futures, multiThreads);
         }
+
 
         for (Future<?> f : futures) {
             try {
@@ -461,23 +487,55 @@ public class ECSFinder {
      * Convert the block (s-lines) to a temporary FASTA and call RNALalifold
      * with a block-specific id-prefix: alifold_<blockAln>.
      */
+    /**
+     * Run RNALalifold on a single MAF block (non-MAFFT pipeline).
+     * Converts the block (s-lines) to a temporary FASTA and calls RNALalifold.
+     * Skips blocks with too few sequences (MIN_SEQS_PER_BLOCK).
+     */
     private static void runRNALalifoldOnBlock(String block, int blockAln)
             throws IOException, InterruptedException {
 
         String stockholmDir = OUT_PATH + "/stockholm";
+        createDirectory(stockholmDir);
+
         File fastaFile = new File(stockholmDir, "block_" + blockAln + ".fasta");
+
+        // Split once
+        String[] sLines = block.split("@");
+
+        // Count sequences (MAF 's' lines)
+        int nS = 0;
+        for (String sLine : sLines) {
+            if (sLine == null) continue;
+            sLine = sLine.trim();
+            if (sLine.startsWith("s")) { // handles "s ..." or "s\t..."
+                nS++;
+            }
+        }
+
+        // Enforce minimum sequences
+        if (nS < MIN_SEQS_PER_BLOCK) {
+            if (VERBOSE) {
+                System.out.println("[INFO] Not running RNALalifold on block " + blockAln +
+                        " (only " + nS + " sequences; need >= " + MIN_SEQS_PER_BLOCK + ")");
+            }
+            return;
+        }
 
         // Write the MAF block to FASTA
         try (BufferedWriter w = new BufferedWriter(new FileWriter(fastaFile))) {
-            String[] sLines = block.split("@");
             for (String sLine : sLines) {
+                if (sLine == null) continue;
                 sLine = sLine.trim();
                 if (sLine.isEmpty()) continue;
                 if (!sLine.startsWith("s")) continue;
+
                 String[] tok = sLine.split("\\s+");
                 if (tok.length < 7) continue;
+
                 String id  = tok[1];
                 String seq = tok[tok.length - 1];
+
                 w.write(">" + id);
                 w.newLine();
                 w.write(seq);
@@ -502,7 +560,10 @@ public class ECSFinder {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
              BufferedReader err    = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
 
+            // Drain stdout
             while (reader.readLine() != null) { /* ignore */ }
+
+            // Drain stderr (optionally print)
             String errLine;
             while ((errLine = err.readLine()) != null) {
                 if (VERBOSE) {
@@ -512,15 +573,17 @@ public class ECSFinder {
         }
 
         int exitCode = process.waitFor();
-        if (exitCode != 0) {
-            throw new IOException("RNALalifold exited with " + exitCode + " on block " + blockAln);
-        }
 
-        // Optionally delete the temporary FASTA
+        // Always try to delete temp FASTA
         if (!fastaFile.delete() && VERBOSE) {
             System.err.println("Warning: could not delete temporary FASTA " + fastaFile.getAbsolutePath());
         }
+
+        if (exitCode != 0) {
+            throw new IOException("RNALalifold exited with " + exitCode + " on block " + blockAln);
+        }
     }
+
 
     private static void iterateStockholm(String block, int blockAln,
                                          List<Future<?>> futures,
@@ -681,7 +744,7 @@ public class ECSFinder {
         }
 
         String loci = Arrays.toString(cordMotif);
-        String chrom = mafTabTemp[1].substring((mafTabTemp[1].lastIndexOf(".") + 1));
+        String chrom = mafContig(mafTabTemp[1]);;
         String lociChrm;
         if (MAFFT) {
             lociChrm = chrom + ", " + loci.substring(1, loci.length() - 1)
@@ -1001,13 +1064,7 @@ public class ECSFinder {
             if (REF_SPECIES_PATTERN.matcher(key).find()) {
                 refSequence  = speciesSequences.get(key).toString();
                 refSpeciesId = key;
-                String[] parts = refSpeciesId.split("\\.");
-                if (parts.length > 1) {
-                    chromosomeNumber = parts[1];
-                } else {
-                    throw new IllegalArgumentException(
-                            "Chromosome number not found in reference species ID: " + refSpeciesId);
-                }
+                chromosomeNumber = mafContig(refSpeciesId);
                 break;
             }
         }
@@ -1484,4 +1541,18 @@ public class ECSFinder {
 
         return outputLines;
     }
+    /** Return "species" part from a MAF src like species.contig. If no dot, return full src. */
+    private static String mafSpecies(String src) {
+        if (src == null) return "";
+        int dot = src.indexOf('.');
+        return (dot > 0) ? src.substring(0, dot) : src;
+    }
+
+    /** Return "contig/chrom" part from a MAF src like species.contig. If no dot, return full src. */
+    private static String mafContig(String src) {
+        if (src == null) return "";
+        int dot = src.indexOf('.');
+        return (dot >= 0 && dot < src.length() - 1) ? src.substring(dot + 1) : src;
+    }
+
 }

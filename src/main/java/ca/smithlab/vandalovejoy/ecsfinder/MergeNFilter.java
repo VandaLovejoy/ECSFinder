@@ -23,14 +23,23 @@ public class MergeNFilter {
             BufferedReader entry = new BufferedReader(new FileReader(file));
             String line;
             boolean firstAlignment = true;
+
             while ((line = entry.readLine()) != null) {
                 if (line.length() != 0 && line.charAt(0) == 's') {
+
                     LinkedHashMap<String, String[]> speciesSequences = new LinkedHashMap<>();
                     ArrayList<String[]> duplicateSequences = new ArrayList<>();
+
                     while (line != null && line.length() != 0 && line.charAt(0) == 's') {
                         String[] arraySequenceInfo = line.split("\\s+");
                         String nameSpeciesWithChro = arraySequenceInfo[1];
-                        String nameSpeciesOnly = nameSpeciesWithChro.substring(0, nameSpeciesWithChro.indexOf("."));
+
+                        // SAFE: allow IDs with no dot, or many dots
+                        int dot = nameSpeciesWithChro.indexOf('.');
+                        String nameSpeciesOnly = (dot > 0)
+                                ? nameSpeciesWithChro.substring(0, dot)
+                                : nameSpeciesWithChro;
+
                         if (!nameSpeciesOnly.equals("ancestral_sequences")) {
                             if (!speciesSequences.containsKey(nameSpeciesOnly)) {
                                 speciesSequences.put(nameSpeciesOnly, arraySequenceInfo);
@@ -40,9 +49,13 @@ public class MergeNFilter {
                         }
                         line = entry.readLine();
                     }
+
                     if (speciesSequences.size() == 1) {
-                        duplicateSequences.add(speciesSequences.get("homo_sapiens"));
+                        // keep old behavior, but avoid NPE if key doesn't exist
+                        String[] hs = speciesSequences.get("homo_sapiens");
+                        if (hs != null) duplicateSequences.add(hs);
                     }
+
                     if (!duplicateSequences.isEmpty()) {
                         if (segDups == null) {
                             segDups = new BufferedWriter(new FileWriter(outputPath + "/removedLines.txt"));
@@ -55,6 +68,7 @@ public class MergeNFilter {
                         }
                         hasRemovedLines = true;
                     }
+
                     if (speciesSequences.size() > 1) {
                         if (!firstAlignment) {
                             out.write("\n\n");
@@ -70,6 +84,7 @@ public class MergeNFilter {
             }
             entry.close();
         }
+
         out.write("\n\n");
         out.close();
 
