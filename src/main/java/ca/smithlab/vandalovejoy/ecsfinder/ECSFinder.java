@@ -27,6 +27,11 @@ public class ECSFinder {
             RNAALIFOLD = "", R = "", RSCAPE = "", MAFFTBINARY = "";
     static double SSZR = -3.0;
 
+    static int MAX_BPSPAN = 300;
+    static int OVERLAP_LENGTH = 300;
+    static int MAX_BLOCK_SIZE = 5000;
+    static double THRESHOLD = 0.679;
+
     // Map block_part -> realigned reference-species sequence (MAFFT pipeline)
     private static Map<String, String> refSpeciesSequences = new HashMap<>();
 
@@ -34,11 +39,11 @@ public class ECSFinder {
     private static Map<String, CoordinateInfo> coordinateMap = new HashMap<>();
 
     static final int MIN_SEQS_PER_BLOCK = 5;
-
     public static void main(String[] args) throws IOException, InterruptedException {
 
         // usage info
         if (args.length == 0) {
+
             System.out.println("\n\t\t\t  version 1.0 \n" +
                     " ________    ______   ______    ________  _                 __                \n" +
                     "|_   __  | .' ___  |.' ____ \\  |_   __  |(_)               |  ]               \n" +
@@ -57,6 +62,10 @@ public class ECSFinder {
                     " -mafft     realign aln using MAFFT (default FALSE)\n" +
                     " -ref str   reference species (substring or /regex/) (default \"homo\")\n" +
                     " -v         verbose (messy but detailed) output\n"+
+                    " -maxbp int maximum base pair span for RNALalifold (default 300)\n" +
+                    " -overlap int overlap length for block splitting (default 300)\n" +
+                    " -maxblock int maximum block size for splitting (default 5000)\n" +
+                    " -threshold dbl RF model prediction threshold (default 0.679)\n" +
             "Requirements / input expectations:\n" +
                     " - Alignments should contain at least " + MIN_SEQS_PER_BLOCK + " sequences to provide enough\n" +
                     "   evolutionary signal for structural conservation/covariation. Blocks with fewer sequences are skipped" +
@@ -219,6 +228,18 @@ public class ECSFinder {
                     break;
                 case "-ref":
                     setRefSpecies(args[++i]);
+                    break;
+                case "-maxbp":
+                    MAX_BPSPAN = Integer.parseInt(args[++i]);
+                    break;
+                case "-overlap":
+                    OVERLAP_LENGTH = Integer.parseInt(args[++i]);
+                    break;
+                case "-maxblock":
+                    MAX_BLOCK_SIZE = Integer.parseInt(args[++i]);
+                    break;
+                case "-threshold":
+                    THRESHOLD = Double.parseDouble(args[++i]);
                     break;
                 default:
                     System.err.println("Invalid argument: " + args[i]);
@@ -547,7 +568,7 @@ public class ECSFinder {
                 ALIFOLDBINARY,
                 "--id-prefix=alifold_" + blockAln,
                 "--noLP",
-                "--maxBPspan=500",
+                "--maxBPspan=" + MAX_BPSPAN,
                 "--ribosum_scoring",
                 "--aln-stk",
                 fastaFile.getAbsolutePath()
@@ -819,7 +840,7 @@ public class ECSFinder {
         String scriptDir = getRScriptPath();
         String rScriptFile = Paths.get(scriptDir, "predictions_ECSFinder.R").toString();
         List<String> cmd = Arrays.asList(
-                RSCRIPT, rScriptFile, inputCsv, outputCsv, scriptDir
+                RSCRIPT, rScriptFile, inputCsv, outputCsv, scriptDir, String.valueOf(THRESHOLD)
         );
         ProcessBuilder pb = new ProcessBuilder(cmd).directory(new File(scriptDir));
         Process p = pb.start();
@@ -986,8 +1007,6 @@ public class ECSFinder {
     public static void convertMafToSeparateFastas(String mafFilePath, String outputDirPath) {
         String fastaOutput = "outputFastaDir";
         int blockCount = 0;
-        int overlapLength = 299;
-        int maxBlockSize = 5000;
         int startAln = 0;
         int lengthAln = 0;
         int endAln = 0;
@@ -1009,7 +1028,6 @@ public class ECSFinder {
                     if (!speciesSequences.isEmpty()) {
                         blockCount++;
                         splitAndWriteBlocks(outputDirPath, blockCount, speciesSequences,
-                                maxBlockSize, overlapLength,
                                 startAln, orientation, lengthAln, endAln);
                         speciesSequences.clear();
                     }
@@ -1037,7 +1055,6 @@ public class ECSFinder {
             if (!speciesSequences.isEmpty()) {
                 blockCount++;
                 splitAndWriteBlocks(outputDirPath, blockCount, speciesSequences,
-                        maxBlockSize, overlapLength,
                         startAln, orientation, lengthAln, endAln);
             }
         } catch (IOException e) {
@@ -1047,7 +1064,6 @@ public class ECSFinder {
 
     private static void splitAndWriteBlocks(String outputDirPath, int blockCount,
                                             Map<String, StringBuilder> speciesSequences,
-                                            int maxBlockSize, int overlapLength,
                                             int startAln, String orientation,
                                             int lengthAln, int chromosomeLength) throws IOException {
 
@@ -1074,9 +1090,9 @@ public class ECSFinder {
                             + REF_SPECIES_RAW + ").");
         }
 
-        for (int i = 0; i < fullLength; i += (maxBlockSize - overlapLength)) {
+        for (int i = 0; i < fullLength; i += (MAX_BLOCK_SIZE - OVERLAP_LENGTH)) {
             int blockStartIndex = i;
-            int blockEndIndex = Math.min(i + maxBlockSize, fullLength);
+            int blockEndIndex = Math.min(i + MAX_BLOCK_SIZE, fullLength);
 
             String refSubSequence = refSequence.substring(blockStartIndex, blockEndIndex);
             int nucleotidesUpToStart = refSequence
@@ -1131,7 +1147,7 @@ public class ECSFinder {
             }
 
             blockPart++;
-            if (i + maxBlockSize < fullLength) {
+            if (i + MAX_BLOCK_SIZE < fullLength) {
                 isSplit = true;
             }
         }
@@ -1276,7 +1292,7 @@ public class ECSFinder {
                     "--id-prefix=alifold_" + blockNumber,
                     "--id-start=" + partNumber,
                     "--noLP",
-                    "--maxBPspan=500",
+                    "--maxBPspan=" + MAX_BPSPAN,
                     "--ribosum_scoring",
                     "--aln-stk",
                     inputFilePath
@@ -1287,7 +1303,7 @@ public class ECSFinder {
                     ALIFOLDBINARY,
                     "--id-prefix=alifold",
                     "--noLP",
-                    "--maxBPspan=500",
+                    "--maxBPspan=" + MAX_BPSPAN,
                     "--ribosum_scoring",
                     "--aln-stk",
                     inputFilePath

@@ -217,6 +217,7 @@ Input requirements
 
 Minimum sequences per alignment block: ECSFinder is designed for multi-species alignments and relies on evolutionary signal
 for conserved RNA structure/covariation. Alignment blocks with <5 sequences are skipped or with sequences fewer than 50 nucleotides in length.
+
 ### Command-Line Options
 
 | Option | Type | Default | Description |
@@ -230,6 +231,10 @@ for conserved RNA structure/covariation. Alignment blocks with <5 sequences are 
 | `-mpi` | Integer | 50 | Minimum mean pairwise identity percentage (0-100) |
 | `-mafft` | Flag | false | Realign each block with MAFFT-GINSI before analysis |
 | `-v` | Flag | false | Enable verbose output for debugging |
+| `-maxbp` | Integer | 300 | Maximum base pair span for RNALalifold |
+| `-overlap` | Integer | 300 | Overlap length for block splitting |
+| `-maxblock` | Integer | 5000 | Maximum block size for block splitting |
+| `-threshold` | Double | 0.679 | RF model prediction threshold |
 
 ### Advanced Examples
 
@@ -288,7 +293,6 @@ java -jar target/ECSFinder-1.0.0.jar \
   -i problem_alignment.maf \
   2>&1 | tee ecsfinder.log
 ```
-
 
 ---
 
