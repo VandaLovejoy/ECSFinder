@@ -76,6 +76,9 @@ public class ECSFinder {
         // parse arguments
         parseArguments(args);
 
+        // Print run parameters to stdout (visible in qsub job output) for record-keeping
+        printRunParameters();
+
         // Now that OUT_PATH is known, define the single CSV path
         SINGLE_CSV_PATH = OUT_PATH + "/final.csv";
 
@@ -93,6 +96,7 @@ public class ECSFinder {
 
         // After feature CSV is complete, run R predictions
         String predictionsCsv = OUT_PATH + "/predictions.csv";
+        @SuppressWarnings("unused")
         List<Double> probabilities = callRScript(
                 SINGLE_CSV_PATH,
                 predictionsCsv
@@ -174,6 +178,7 @@ public class ECSFinder {
         }
     }
 
+    @SuppressWarnings("unused")
     private static String getBinaryPath(String binaryName) throws IOException {
         List<String> command = Arrays.asList("which", binaryName);
         try {
@@ -298,6 +303,37 @@ public class ECSFinder {
     }
 
     /* ==============================
+       Listing parameters at top of qsub job output file
+       ============================== */
+
+    private static void printRunParameters() {
+        System.out.println("===== ECSFinder Run Parameters =====");
+
+        System.out.println("Input file        : " + FILENAME);
+        System.out.println("Output directory  : " + OUT_PATH);
+
+        System.out.println("Threads           : " + NTHREDS);
+        System.out.println("Max gaps (%)      : " + GAPS);
+        System.out.println("Min MPI           : " + MIN_MPI);
+        System.out.println("SSZR threshold    : " + SSZR);
+        System.out.println("Prediction thresh : " + THRESHOLD);
+
+        System.out.println("MAFFT enabled     : " + MAFFT);
+        System.out.println("Verbose           : " + VERBOSE);
+
+        System.out.println("Reference species : " + REF_SPECIES_RAW);
+        System.out.println("Reference regex   : " + REF_SPECIES_PATTERN.pattern());
+
+        System.out.println("Max BP span       : " + MAX_BPSPAN);
+        System.out.println("Overlap length    : " + OVERLAP_LENGTH);
+        System.out.println("Max block size    : " + MAX_BLOCK_SIZE);
+
+        System.out.println("Start time        : " + java.time.LocalDateTime.now());
+
+        System.out.println("====================================\n");
+    }
+
+    /* ==============================
        MAF preprocessing
        ============================== */
 
@@ -393,7 +429,8 @@ public class ECSFinder {
 
         // Realign each block individually to avoid memory issues
         File outputDir = new File(OUT_PATH + "/outputFastaDir");
-        File[] fastaFiles = outputDir.listFiles((dir, name) -> name.endsWith(".fasta"));
+        File[] fastaFiles = outputDir.listFiles((dir, name) -> 
+            name.endsWith(".fasta") && !name.endsWith("_realigned.fasta"));
 
         if (fastaFiles != null) {
             for (File fastaFile : fastaFiles) {
@@ -1398,6 +1435,7 @@ public class ECSFinder {
 
         int offset = countRealBases(alnSeq.substring(0, startIndexInAlignment));
 
+        @SuppressWarnings("unused")
         int forwardStart, forwardEnd;
         if (strand.equals("+")) {
             forwardStart = mafStart;
@@ -1558,6 +1596,7 @@ public class ECSFinder {
         return outputLines;
     }
     /** Return "species" part from a MAF src like species.contig. If no dot, return full src. */
+    @SuppressWarnings("unused")
     private static String mafSpecies(String src) {
         if (src == null) return "";
         int dot = src.indexOf('.');
