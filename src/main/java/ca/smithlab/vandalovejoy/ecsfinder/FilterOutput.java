@@ -2,10 +2,8 @@ package ca.smithlab.vandalovejoy.ecsfinder;
 
 
 import java.io.*;
-import java.nio.file.*;
 import java.util.*;
 import java.util.regex.*;
-import java.util.stream.*;
 
 public class FilterOutput {
     double min_eval;
