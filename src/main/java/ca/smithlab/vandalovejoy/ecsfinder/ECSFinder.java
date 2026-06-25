@@ -55,18 +55,18 @@ public class ECSFinder {
                     "Reads a set of maf files, calculates stats, scans with SISSIz and R-scape, outputs bed coordinates of high-confidence predictions\n\n" +
                     "Usage: java ECSFinder [options] -o output/directory -i input.maf_or_dir\n\n" +
                     "Options:\n" +
-                    " -c int     number of CPUs for calculations (default 4)\n" +
-                    " -g int     max gap percentage of sequences for 2D prediction (default 50)\n" +
-                    " -sszr dbl  report SISSIz+RIBOSUM hits below this Z-score (default -3.0)\n" +
-                    " -mpi int   minimum MPI (percent identity) cutoff (default 50)\n" +
-                    " -mafft     realign aln using MAFFT (default FALSE)\n" +
-                    " -ref str   reference species (substring or /regex/) (default \"homo\")\n" +
-                    " -v         verbose (messy but detailed) output\n"+
-                    " -maxbp int maximum base pair span for RNALalifold (default 300)\n" +
-                    " -overlap int overlap length for block splitting (default 300)\n" +
-                    " -maxblock int maximum block size for splitting (default 5000)\n" +
-                    " -threshold dbl RF model prediction threshold (default 0.679)\n" +
-            "Requirements / input expectations:\n" +
+                    " -c int           number of CPUs for calculations (default 4)\n" +
+                    " -g int           max gap percentage of sequences for 2D prediction (default 50)\n" +
+                    " -sszr dbl        report SISSIz+RIBOSUM hits below this Z-score (default -3.0)\n" +
+                    " -mpi int         minimum MPI (percent identity) cutoff (default 50)\n" +
+                    " -mafft           realign aln using MAFFT (default FALSE)\n" +
+                    " -ref str         reference species (substring or /regex/) (default \"homo\")\n" +
+                    " -v               verbose (messy but detailed) output\n"+
+                    " -maxbp int       maximum base pair span for RNALalifold (default 300)\n" +
+                    " -overlap int     overlap length for block splitting (default 300)\n" +
+                    " -maxblock int    maximum block size for splitting (default 5000)\n" +
+                    " -threshold dbl   RF model prediction threshold (default 0.679)\n" +
+            "\nRequirements / input expectations:\n" +
                     " - Alignments should contain at least " + MIN_SEQS_PER_BLOCK + " sequences to provide enough\n" +
                     "   evolutionary signal for structural conservation/covariation. Blocks with fewer sequences are skipped" +
                     " or alignments with fewer than 50 nucleotides per species.\n" );
@@ -307,7 +307,7 @@ public class ECSFinder {
        ============================== */
 
     private static void printRunParameters() {
-        System.out.println("===== ECSFinder Run Parameters =====");
+        System.out.println("\n===== ECSFinder Run Parameters =====");
 
         System.out.println("Input file        : " + FILENAME);
         System.out.println("Output directory  : " + OUT_PATH);
