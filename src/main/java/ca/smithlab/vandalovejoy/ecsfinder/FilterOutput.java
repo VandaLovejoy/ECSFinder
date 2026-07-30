@@ -11,9 +11,8 @@ public class FilterOutput {
     double min_eval;
     public static double processFile(String filePath, String searchPattern) {
         double minEval = Double.MAX_VALUE;
-        try {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             List<Double> eValues = new ArrayList<>();
-            BufferedReader reader = new BufferedReader(new FileReader(filePath));
             String line;
 
             // Extract values based on the search pattern
@@ -23,7 +22,6 @@ public class FilterOutput {
                     eValues.add(Double.valueOf(matcher.group(1)));
                 }
             }
-            reader.close();
             if (!eValues.isEmpty()) {
                 minEval = Collections.min(eValues);
             }
@@ -36,8 +34,7 @@ public class FilterOutput {
 
     public static double[] processTxtFile(String filePath) {
         double[] energies = new double[2]; // Default to 0.0 for both elements
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(filePath));
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             Pattern pattern = Pattern.compile("\\(([^=]+)=([^+]+)\\+([^\\)]+)\\)");
 
@@ -49,7 +46,6 @@ public class FilterOutput {
                     energies = new double[]{Double.parseDouble(part2), Double.parseDouble(part3)};
                 }
             }
-            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -20,69 +20,74 @@ public class MergeNFilter {
         boolean hasRemovedLines = false;
 
         for (String file : args) {
-            BufferedReader entry = new BufferedReader(new FileReader(file));
             String line;
             boolean firstAlignment = true;
 
-            while ((line = entry.readLine()) != null) {
-                if (line.length() != 0 && line.charAt(0) == 's') {
+            try (BufferedReader entry = new BufferedReader(new FileReader(file))) {
+                while ((line = entry.readLine()) != null) {
+                    if (line.length() != 0 && line.charAt(0) == 's') {
 
-                    LinkedHashMap<String, String[]> speciesSequences = new LinkedHashMap<>();
-                    ArrayList<String[]> duplicateSequences = new ArrayList<>();
+                        LinkedHashMap<String, String[]> speciesSequences = new LinkedHashMap<>();
+                        ArrayList<String[]> duplicateSequences = new ArrayList<>();
 
-                    while (line != null && line.length() != 0 && line.charAt(0) == 's') {
-                        String[] arraySequenceInfo = line.split("\\s+");
-                        String nameSpeciesWithChro = arraySequenceInfo[1];
+                        while (line != null && line.length() != 0 && line.charAt(0) == 's') {
+                            String[] arraySequenceInfo = line.split("\\s+");
+                            String nameSpeciesWithChro = arraySequenceInfo[1];
 
-                        // SAFE: allow IDs with no dot, or many dots
-                        int dot = nameSpeciesWithChro.indexOf('.');
-                        String nameSpeciesOnly = (dot > 0)
-                                ? nameSpeciesWithChro.substring(0, dot)
-                                : nameSpeciesWithChro;
+                            // SAFE: allow IDs with no dot, or many dots
+                            int dot = nameSpeciesWithChro.indexOf('.');
+                            String nameSpeciesOnly = (dot > 0)
+                                    ? nameSpeciesWithChro.substring(0, dot)
+                                    : nameSpeciesWithChro;
 
-                        if (!nameSpeciesOnly.equals("ancestral_sequences")) {
-                            if (!speciesSequences.containsKey(nameSpeciesOnly)) {
-                                speciesSequences.put(nameSpeciesOnly, arraySequenceInfo);
-                            } else {
-                                duplicateSequences.add(arraySequenceInfo);
+                            if (!nameSpeciesOnly.equals("ancestral_sequences")) {
+                                if (!speciesSequences.containsKey(nameSpeciesOnly)) {
+                                    speciesSequences.put(nameSpeciesOnly, arraySequenceInfo);
+                                } else {
+                                    duplicateSequences.add(arraySequenceInfo);
+                                }
+                            }
+                            line = entry.readLine();
+                        }
+
+                        if (speciesSequences.size() == 1) {
+                            // A lone sequence is only useful if it's the configured reference
+                            // species (-ref); otherwise there's no way to derive coordinates from it.
+                            for (Map.Entry<String, String[]> speciesEntry : speciesSequences.entrySet()) {
+                                if (ECSFinder.REF_SPECIES_PATTERN.matcher(speciesEntry.getKey()).find()) {
+                                    duplicateSequences.add(speciesEntry.getValue());
+                                    break;
+                                }
                             }
                         }
-                        line = entry.readLine();
-                    }
 
-                    if (speciesSequences.size() == 1) {
-                        // keep old behavior, but avoid NPE if key doesn't exist
-                        String[] hs = speciesSequences.get("homo_sapiens");
-                        if (hs != null) duplicateSequences.add(hs);
-                    }
+                        if (!duplicateSequences.isEmpty()) {
+                            if (segDups == null) {
+                                segDups = new BufferedWriter(new FileWriter(outputPath + "/removedLines.txt"));
+                            }
+                            if (duplicateSequences.indexOf(duplicateSequences.get(0)) == 0) {
+                                segDups.write("\na score=0\n");
+                            }
+                            for (String[] arraySpecies : duplicateSequences) {
+                                segDups.write(String.join("\t", arraySpecies) + "\n");
+                            }
+                            hasRemovedLines = true;
+                        }
 
-                    if (!duplicateSequences.isEmpty()) {
-                        if (segDups == null) {
-                            segDups = new BufferedWriter(new FileWriter(outputPath + "/removedLines.txt"));
+                        if (speciesSequences.size() > 1) {
+                            if (!firstAlignment) {
+                                out.write("\n\n");
+                            }
+                            out.write("\n\na\n");
+                            for (String key : speciesSequences.keySet()) {
+                                String[] value = speciesSequences.get(key);
+                                out.write(String.join("\t", value) + "\n");
+                            }
+                            firstAlignment = false;
                         }
-                        if (duplicateSequences.indexOf(duplicateSequences.get(0)) == 0) {
-                            segDups.write("\na score=0\n");
-                        }
-                        for (String[] arraySpecies : duplicateSequences) {
-                            segDups.write(String.join("\t", arraySpecies) + "\n");
-                        }
-                        hasRemovedLines = true;
-                    }
-
-                    if (speciesSequences.size() > 1) {
-                        if (!firstAlignment) {
-                            out.write("\n\n");
-                        }
-                        out.write("\n\na\n");
-                        for (String key : speciesSequences.keySet()) {
-                            String[] value = speciesSequences.get(key);
-                            out.write(String.join("\t", value) + "\n");
-                        }
-                        firstAlignment = false;
                     }
                 }
             }
-            entry.close();
         }
 
         out.write("\n\n");

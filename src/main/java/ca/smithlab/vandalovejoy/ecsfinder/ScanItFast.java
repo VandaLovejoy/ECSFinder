@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
 import static ca.smithlab.vandalovejoy.ecsfinder.ECSFinder.runExternalCommand;
@@ -17,8 +18,8 @@ public class ScanItFast implements Runnable {
     private final String[] key;
     private final ArrayList<String[]> associativeList;
 
-    private static String Path;
-    private static String SSZBINARY;
+    private final String Path;
+    private final String SSZBINARY;
 
     // Stats thresholds
     private double SSZR_THRESHOLD = -3.0;   // SISSIz threshold
@@ -44,15 +45,22 @@ public class ScanItFast implements Runnable {
      */
     private static final AtomicInteger activeCsvWriters = new AtomicInteger(0);
 
+    /**
+     * Monotonic counter for temp-file uniqueness across concurrently-running
+     * ScanItFast tasks (replaces a small random range that risked collisions
+     * under high thread counts).
+     */
+    private static final AtomicLong ID_COUNTER = new AtomicLong(0);
+
     public ScanItFast(ArrayList<String[]> associativeList,
                       String[] key,
                       File outputDir,
                       String SSZBINARY,
                       boolean VERBOSE) {
         // We'll store Path with "/aln" subdir
-        ScanItFast.Path      = outputDir + "/aln/";
-        ScanItFast.SSZBINARY = SSZBINARY;
-        ScanItFast.VERBOSE   = VERBOSE;
+        this.Path             = outputDir + "/aln/";
+        this.SSZBINARY        = SSZBINARY;
+        ScanItFast.VERBOSE    = VERBOSE;
         this.associativeList = associativeList;
         this.key             = key;
     }
@@ -366,7 +374,7 @@ public class ScanItFast implements Runnable {
 
         if (VERBOSE)
             System.out.println("Pre SISSIz bed file: \n" + " " + BedFile);
-        int random = (int) (10000 * Math.random());
+        long random = ID_COUNTER.incrementAndGet();
         File Aln   = new File(Path + BedFile.replaceAll("\t", "_") + ".aln." + random);
         File AlnRC = new File(Path + BedFile.replaceAll("\t", "_") + "rc.aln." + random);
 
@@ -411,8 +419,8 @@ public class ScanItFast implements Runnable {
         String[] SissizOutTab = new String[12];
 
         try {
-            SissizOutTab = ScanSSZ(Path, BedFile, random);
-            if (SissizOutTab == null) { // timeout
+            SissizOutTab = scanSSZ(BedFile, random);
+            if (SissizOutTab == null) { // timeout, or no SISSIz result line found
                 Aln.delete();
                 return;
             }
@@ -423,7 +431,7 @@ public class ScanItFast implements Runnable {
             return;
         }
 
-        if (SissizOutTab == null || SissizOutTab[12] == null) {
+        if (SissizOutTab == null) {
             Aln.delete();
             return;
         } else {
@@ -502,16 +510,18 @@ public class ScanItFast implements Runnable {
 
         // * * * * * *  now for the RC  * * * * * *
         try {
-            SissizOutTab = ScanSSZ(Path, BedFile + "rc", random);
-            if (SissizOutTab == null) {
+            SissizOutTab = scanSSZ(BedFile + "rc", random);
+            if (SissizOutTab == null) { // timeout, or no SISSIz result line found
                 AlnRC.delete();
+                return;
             }
         } catch (IOException | InterruptedException Err) {
             Err.printStackTrace();
             System.err.println("ScanSSZ failed in RC with ");
             AlnRC.delete();
+            return;
         }
-        if (SissizOutTab == null || SissizOutTab[12] == null) {
+        if (SissizOutTab == null) {
             AlnRC.delete();
         } else {
             FinalBedFileRC = BedFile + "_" + (int) (Double.parseDouble(SissizOutTab[12]) * -100) + "_" + Antisense;
@@ -612,9 +622,9 @@ public class ScanItFast implements Runnable {
     /*********************************************************************
      * SISSIz scan & parse
      *********************************************************************/
-    protected static String[] ScanSSZ(String path, String bedFile, int id)
+    private String[] scanSSZ(String bedFile, long id)
             throws IOException, InterruptedException {
-        String name = path + bedFile.replaceAll("\t", "_") + ".aln." + id;
+        String name = Path + bedFile.replaceAll("\t", "_") + ".aln." + id;
 
         List<String> commandList = new ArrayList<>();
         commandList.add(SSZBINARY);
@@ -626,7 +636,6 @@ public class ScanItFast implements Runnable {
         long timeoutMs = 300_000;  // 5 minutes
         List<String> outputLines = runExternalCommand(commandList, new File(Path), timeoutMs, VERBOSE);
 
-        String[] sissizOutTab = new String[12];
         for (String line : outputLines) {
             if (line != null && line.startsWith("TREE")) {
                 String[] parts = line.split(";");
@@ -634,12 +643,21 @@ public class ScanItFast implements Runnable {
                     if (VERBOSE) {
                         System.out.println("SISSIz output: " + parts[1]);
                     }
-                    sissizOutTab = parts[1].trim().split("\\s+");
-                    break;
+                    String[] sissizOutTab = parts[1].trim().split("\\s+");
+                    // Expect at least 13 whitespace-separated fields (index 12 = z-score).
+                    // A malformed/short SISSIz output line is treated as "no result".
+                    if (sissizOutTab.length > 12) {
+                        return sissizOutTab;
+                    }
+                    if (VERBOSE) {
+                        System.out.println("SISSIz output line had too few fields, skipping: " + parts[1]);
+                    }
+                    return null;
                 }
             }
         }
-        return sissizOutTab;
+        // No matching SISSIz result line found in output.
+        return null;
     }
 
     /** Set SISSIz threshold */
@@ -728,7 +746,9 @@ public class ScanItFast implements Runnable {
             paths.filter(Files::isRegularFile)
                     .filter(path -> {
                         String fileName = path.getFileName().toString();
-                        return fileName.startsWith(prefix) && !(fileName.endsWith("aln"));
+                        // Protect the final alignment output, including collision-suffixed
+                        // variants like "foo.aln_1" produced when a filename already existed.
+                        return fileName.startsWith(prefix) && !fileName.matches(".*\\.aln(_\\d+)?$");
                     })
                     .forEach(path -> {
                         try {

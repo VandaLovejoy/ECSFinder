@@ -6,12 +6,13 @@ suppressPackageStartupMessages({
 
 # Parse command-line arguments
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) != 3) {
-  stop("Usage: Rscript script.R <input_file> <output_file> <model_dir>")
+if (length(args) < 3 || length(args) > 4) {
+  stop("Usage: Rscript script.R <input_file> <output_file> <model_dir> [threshold]")
 }
 input_file  <- args[1]
 output_file <- args[2]
 model_dir   <- args[3]
+threshold   <- if (length(args) == 4) as.numeric(args[4]) else 0.679
 
 # Load the pretrained Random Forest model
 model_path <- file.path(model_dir, "final_rf_model.rds")
@@ -54,7 +55,6 @@ predict_probs <- function(model, newdata) {
 
 # Generate predictions
 predicted_probs <- predict_probs(model_rf, x_test)
-threshold <- 0.679
 predicted_class <- ifelse(predicted_probs >= threshold, "TP", "FP")
 
 # Compile results

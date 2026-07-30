@@ -229,6 +229,10 @@ for conserved RNA structure/covariation. Alignment blocks with <5 sequences are 
 | `-sszr` | Double | -3.0 | SISSIz Z-score threshold (more negative = more stringent) |
 | `-mpi` | Integer | 50 | Minimum mean pairwise identity percentage (0-100) |
 | `-mafft` | Flag | false | Realign each block with MAFFT-GINSI before analysis |
+| `-maxbp` | Integer | 300 | Maximum base pair span for RNALalifold (`--maxBPspan`) |
+| `-overlap` | Integer | 300 | Overlap length (nt) between adjacent blocks when splitting long alignments |
+| `-maxblock` | Integer | 5000 | Maximum sequence length (nt) per block when splitting long alignments |
+| `-threshold` | Double | 0.679 | Random Forest classifier probability threshold (default corresponds to 5% FPR) |
 | `-v` | Flag | false | Enable verbose output for debugging |
 
 ### Advanced Examples
